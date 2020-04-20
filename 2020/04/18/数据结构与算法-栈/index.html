@@ -105,54 +105,52 @@
 <li>最简单的方法是使用一个数组来存储元素，但是在使用数组的时候，大部分方法的时间复杂度是O(n)，即需要迭代整个数组直到找到需要的那个元素位置，最坏的情况下需要迭代数组的所有位置。</li>
 <li>数组是元素的有序集合，为了保证元素排列有序，会占用更多的内存空间。  </li>
 <li><em>如果能直接获取元素，占用较少的空间，仍然保证元素按照需要的所排列，就会更好*</em>  </li>
-<li>代码实现：<pre><code>class Stack {
-    constructor() {
-        this.count = 0
-        this.items = {};
+<li>代码实现：<br>  class Stack {<pre><code>constructor() {
+    this.count = 0
+    this.items = {};
+}
+push(e) {
+    this.items[this.count] = e;
+    this.count++;
+}
+pop() {
+    if (this.count == 0) {
+        return undefined;
     }
-    push(e) {
-        this.items[this.count] = e;
-        this.count++;
+    this.count--;
+    const result = this.items[this.count];
+    delete this.items[this.count];
+    return result;
+}
+peek() {
+    if (this.count == 0) {
+        return undefined;
     }
-    pop() {
-        if (this.count == 0) {
-            return undefined;
-        }
-        this.count--;
-        const result = this.items[this.count];
-        delete this.items[this.count];
-        return result;
+    return this.items[this.count - 1];
+}
+isEmpty() {
+    return this.count == 0;
+}
+clear() {
+    this.items = {};
+    this.count = 0;
+}
+size() {
+    return this.count;
+}
+toString(){
+    if(this.count == 0){
+        return &quot;&quot;;
     }
-    peek() {
-        if (this.count == 0) {
-            return undefined;
-        }
-        return this.items[this.count - 1];
+    let objString = &quot;&quot;;
+    if(Object.keys(this.items).length == 1){
+        return `${this.items[0]}`
     }
-    isEmpty() {
-        return this.count == 0;
+    for(let i in this.items){
+        objString += `${this.items[i]},`
     }
-    clear() {
-        this.items = {};
-        this.count = 0;
-    }
-    size() {
-        return this.count;
-    }
-    toString(){
-        if(this.count == 0){
-            return &quot;&quot;;
-        }
-        let objString = &quot;&quot;;
-        if(Object.keys(this.items).length == 1){
-            return `${this.items[0]}`
-        }
-        for(let i in this.items){
-            objString += `${this.items[i]},`
-        }
-        return objString.slice(0,objString.length -1);
-    }
-}</code></pre></li>
+    return objString.slice(0,objString.length -1);
+}</code></pre>  }</li>
 </ul>
 <hr>
 <ol start="3">
