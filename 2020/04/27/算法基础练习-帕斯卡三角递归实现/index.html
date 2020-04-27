@@ -6,7 +6,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    数据结构与算法 - 栈 |  Negroni&#39;s blog
+    算法基础练习-帕斯卡三角递归实现 |  Negroni&#39;s blog
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -30,7 +30,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-数据结构与算法-栈" class="article article-type-post" itemscope
+  <article id="post-算法基础练习-帕斯卡三角递归实现" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -38,7 +38,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  数据结构与算法 - 栈
+  算法基础练习-帕斯卡三角递归实现
 </h1>
   
 
@@ -47,8 +47,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/04/18/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%A0%88/" class="article-date">
-  <time datetime="2020-04-18T11:00:23.000Z" itemprop="datePublished">2020-04-18</time>
+      <a href="/2020/04/27/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80%E7%BB%83%E4%B9%A0-%E5%B8%95%E6%96%AF%E5%8D%A1%E4%B8%89%E8%A7%92%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0/" class="article-date">
+  <time datetime="2020-04-27T14:28:19.000Z" itemprop="datePublished">2020-04-27</time>
 </a>
       
   <div class="article-category">
@@ -62,7 +62,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">574字</span>
+            <span class="post-count">348字</span>
         </span>
     </span>
 
@@ -71,7 +71,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">2分钟</span>
+            <span class="post-count">1分钟</span>
         </span>
     </span>
 </div>
@@ -82,8 +82,6 @@
 
     
     
-    <div class="tocbot"></div>
-
 
 
 
@@ -96,84 +94,26 @@
       
 
       
-      <h6 id="实现一个基本的栈"><a href="#实现一个基本的栈" class="headerlink" title="实现一个基本的栈"></a>实现一个基本的栈</h6><ol>
-<li>遵循后进先出原则：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Stack</span></span>&#123;</span><br><span class="line">				<span class="keyword">constructor</span>() &#123;</span><br><span class="line">				    <span class="keyword">this</span>.item = [];</span><br><span class="line">				&#125;</span><br><span class="line">				push(e)&#123;</span><br><span class="line">					<span class="keyword">this</span>.item.push(e);</span><br><span class="line">				&#125;</span><br><span class="line">				pop()&#123;</span><br><span class="line">					<span class="keyword">this</span>.item.pop();</span><br><span class="line">				&#125;</span><br><span class="line">				peep()&#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="keyword">this</span>.item[<span class="number">0</span>];</span><br><span class="line">				&#125;</span><br><span class="line">				isEmpty()&#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="keyword">this</span>.item.length == <span class="number">0</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				clear()&#123;</span><br><span class="line">					<span class="keyword">this</span>.item = [];</span><br><span class="line">				&#125;</span><br><span class="line">				size()&#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="keyword">this</span>.item.length;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br></pre></td></tr></table></figure>
-<a id="more"></a></li>
-<li>给予JavaScript对象的Stack类：</li>
-</ol>
-<ul>
-<li>最简单的方法是使用一个数组来存储元素，但是在使用数组的时候，大部分方法的时间复杂度是O(n)，即需要迭代整个数组直到找到需要的那个元素位置，最坏的情况下需要迭代数组的所有位置。</li>
-<li>数组是元素的有序集合，为了保证元素排列有序，会占用更多的内存空间。  </li>
-<li><em>如果能直接获取元素，占用较少的空间，仍然保证元素按照需要的所排列，就会更好*</em>  </li>
-<li>代码实现：<br>  class Stack {<pre><code>constructor() {
-    this.count = 0
-    this.items = {};
-}
-push(e) {
-    this.items[this.count] = e;
-    this.count++;
-}
-pop() {
-    if (this.count == 0) {
-        return undefined;
-    }
-    this.count--;
-    const result = this.items[this.count];
-    delete this.items[this.count];
-    return result;
-}
-peek() {
-    if (this.count == 0) {
-        return undefined;
-    }
-    return this.items[this.count - 1];
-}
-isEmpty() {
-    return this.count == 0;
-}
-clear() {
-    this.items = {};
-    this.count = 0;
-}
-size() {
-    return this.count;
-}
-toString(){
-    if(this.count == 0){
-        return &quot;&quot;;
-    }
-    let objString = &quot;&quot;;
-    if(Object.keys(this.items).length == 1){
-        return `${this.items[0]}`
-    }
-    for(let i in this.items){
-        objString += `${this.items[i]},`
-    }
-    return objString.slice(0,objString.length -1);
-}</code></pre>  }</li>
-</ul>
-<hr>
-<ol start="3">
-<li>用栈解决问题</li>
-</ol>
-<ul>
-<li>求二进制问题：</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">decimalToBinary</span>(<span class="params">decNumber</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">let</span> stack = <span class="keyword">new</span> Stack();</span><br><span class="line">	<span class="keyword">let</span> remain;</span><br><span class="line">	<span class="keyword">let</span> return_str = <span class="string">""</span>;</span><br><span class="line">	<span class="keyword">while</span>(decNumber &gt; <span class="number">0</span>)&#123;</span><br><span class="line">		remain = <span class="built_in">Math</span>.floor(decNumber % <span class="number">2</span>); </span><br><span class="line">		stack.push(remain);</span><br><span class="line">		decNumber = <span class="built_in">Math</span>.floor(decNumber / <span class="number">2</span>); </span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(!stack.isEmpty())&#123;</span><br><span class="line">		return_str += stack.pop().toString();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> return_str; </span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(decimalToBinary(<span class="number">233</span>)) 	<span class="comment">//1111</span></span><br></pre></td></tr></table></figure>
+      <p><strong>计算帕斯卡三角</strong></p>
+<p>这玩意长这样：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">      <span class="number">1</span></span><br><span class="line">    <span class="number">1</span>   <span class="number">1</span></span><br><span class="line">  <span class="number">1</span>   <span class="number">2</span>   <span class="number">1</span>	</span><br><span class="line"><span class="number">1</span>   <span class="number">3</span>   <span class="number">3</span>  <span class="number">1</span></span><br><span class="line"> <span class="number">1</span>   <span class="number">4</span>   <span class="number">6</span>   <span class="number">4</span>  <span class="number">1</span></span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>如果不用栈</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">decimalToBinary</span>(<span class="params">decNumber</span>)</span>&#123; </span><br><span class="line">	<span class="keyword">let</span> remain;</span><br><span class="line">	<span class="keyword">let</span> return_str = <span class="string">""</span>;</span><br><span class="line">	<span class="keyword">while</span>(decNumber &gt; <span class="number">0</span>)&#123;</span><br><span class="line">		remain = <span class="built_in">Math</span>.floor(decNumber % <span class="number">2</span>);  </span><br><span class="line">		decNumber = <span class="built_in">Math</span>.floor(decNumber / <span class="number">2</span>);</span><br><span class="line">		return_str += remain;</span><br><span class="line">	&#125;  </span><br><span class="line">	<span class="keyword">return</span> [...return_str].reverse().join(<span class="string">''</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(decimalToBinary(<span class="number">233</span>)) 	<span class="comment">//1111</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>进制转换算法 - 修改上一个为可以转换成基数为2~36的任意进制</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">decimalToBinary</span>(<span class="params">decNumber,base</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(base &gt; <span class="number">36</span> || base &lt;<span class="number">2</span>) <span class="keyword">return</span> <span class="string">''</span>;</span><br><span class="line">	<span class="keyword">let</span> stack = <span class="keyword">new</span> Stack();</span><br><span class="line">	<span class="keyword">const</span> digits = <span class="string">`0123456789ABCDEFGHIGKLMNOPQRSTUVWXYZ`</span>;</span><br><span class="line">	<span class="keyword">let</span> remain;</span><br><span class="line">	<span class="keyword">let</span> return_str = <span class="string">""</span>;</span><br><span class="line">	<span class="keyword">while</span>(decNumber &gt; <span class="number">0</span>)&#123;</span><br><span class="line">		remain = <span class="built_in">Math</span>.floor(decNumber % base); </span><br><span class="line">		stack.push(remain);</span><br><span class="line">		decNumber = <span class="built_in">Math</span>.floor(decNumber / base); </span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(!stack.isEmpty())&#123;</span><br><span class="line">		return_str += digits[stack.pop()].toString()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> return_str; </span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(decimalToBinary(<span class="number">233</span>,<span class="number">2</span>)) 	<span class="comment">//11101001</span></span><br></pre></td></tr></table></figure>
+<p>边界是1，内部数是位于上面两个数之和。</p>
+<a id="more"></a>
 
-<ul>
-<li>如果不用栈</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">decimalToBinary</span>(<span class="params">decNumber,base</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(base &gt; <span class="number">36</span> || base &lt;<span class="number">2</span>) <span class="keyword">return</span> <span class="string">''</span>; </span><br><span class="line">	<span class="keyword">const</span> digits = <span class="string">`0123456789ABCDEFGHIGKLMNOPQRSTUVWXYZ`</span>;</span><br><span class="line">	<span class="keyword">let</span> remain;</span><br><span class="line">	<span class="keyword">let</span> return_str = <span class="string">""</span>;</span><br><span class="line">	<span class="keyword">while</span>(decNumber &gt; <span class="number">0</span>)&#123;</span><br><span class="line">		remain = <span class="built_in">Math</span>.floor(decNumber % base);  </span><br><span class="line">		decNumber = <span class="built_in">Math</span>.floor(decNumber / base);</span><br><span class="line">		return_str += digits[remain];</span><br><span class="line">	&#125; </span><br><span class="line">	<span class="keyword">return</span> [...return_str].reverse().join(<span class="string">''</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(decimalToBinary(<span class="number">233</span>,<span class="number">2</span>)) 	<span class="comment">//11101001</span></span><br></pre></td></tr></table></figure>
+<p>使用JavaScript实现:</p>
+<p>解题步骤：</p>
+<p>设置三个形参：x,y,arr</p>
+<p>x - 要计算到多少 ，y - 作为初始值，arr - 存放计算结果</p>
+<p>代码实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">psk</span>(<span class="params">x,y,arr</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">let</span> last_arr = arr.concat(); </span><br><span class="line">	<span class="keyword">if</span>(y == <span class="number">0</span>)&#123;</span><br><span class="line">		arr.push(<span class="number">1</span>)</span><br><span class="line">	&#125;<span class="keyword">else</span>&#123; </span><br><span class="line">		arr.push(y)	</span><br><span class="line">		arr[arr.length<span class="number">-1</span>] = <span class="number">1</span>; </span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">1</span> ; i &lt; y ; i ++)&#123;</span><br><span class="line">			arr[i] = last_arr[y-i] + last_arr[y-i<span class="number">-1</span>];  </span><br><span class="line">		&#125;</span><br><span class="line">	&#125; </span><br><span class="line">	<span class="built_in">console</span>.log(arr)</span><br><span class="line">	<span class="keyword">if</span>(y == x) <span class="keyword">return</span> arr;</span><br><span class="line">	<span class="keyword">return</span> psk(x,y+<span class="number">1</span>,arr);</span><br><span class="line">&#125; </span><br><span class="line">psk(<span class="number">10</span>,<span class="number">0</span>,[])</span><br></pre></td></tr></table></figure>
+<p>代码解析：</p>
+<p>定义一个数组，用来存放上一次的计算结果，由于数组是引用类型，所以需要进行了深拷贝。</p>
+<p>判定，当初始值为0的时候，数组为[1]，如果不为0，则将数push进数组arr中，由于边界值都是1，所以将arr.length-1设为1，然后</p>
+<p>进行for循环，判定当前操作了几次，然后去修改中间数(从1开始到y-1结束即为中间数)，然后修改该项为上方这个数上面的两数之和，</p>
+<p>最后当初始值等于我们要求的值时返回帕斯卡三角数组，如果不等于时将初始值+1再次带入递归调用继续求值。</p>
+<p>最后输出结果：</p>
+<p><img src="https://pic.downk.cc/item/5ea6ec37c2a9a83be5cebf5a.png" alt=""></p>
 
       
       <!-- reward -->
@@ -243,14 +183,14 @@ toString(){
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2020/04/18/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%A0%88/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2020/04/27/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80%E7%BB%83%E4%B9%A0-%E5%B8%95%E6%96%AF%E5%8D%A1%E4%B8%89%E8%A7%92%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6/" rel="tag">读书</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
 
 
     </footer>
@@ -261,19 +201,10 @@ toString(){
   
   <nav class="article-nav">
     
-      <a href="/2020/04/27/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80%E7%BB%83%E4%B9%A0-%E5%B8%95%E6%96%AF%E5%8D%A1%E4%B8%89%E8%A7%92%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            算法基础练习-帕斯卡三角递归实现
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/04/17/%E5%93%8D%E5%BA%94%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%A4%A7%E5%B1%8F/" class="article-nav-link">
+      <a href="/2020/04/18/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%A0%88/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">响应式数据大屏</div>
+        <div class="article-nav-title">数据结构与算法 - 栈</div>
       </a>
     
   </nav>
