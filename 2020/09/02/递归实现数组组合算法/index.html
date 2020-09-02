@@ -6,7 +6,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    记录几道题 |  Negroni&#39;s blog
+    递归实现数组组合算法 |  Negroni&#39;s blog
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -30,7 +30,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-记录几道题" class="article article-type-post" itemscope
+  <article id="post-递归实现数组组合算法" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -38,7 +38,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  记录几道题
+  递归实现数组组合算法
 </h1>
   
 
@@ -47,8 +47,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/09/01/%E8%AE%B0%E5%BD%95%E5%87%A0%E9%81%93%E9%A2%98/" class="article-date">
-  <time datetime="2020-09-01T14:15:53.000Z" itemprop="datePublished">2020-09-01</time>
+      <a href="/2020/09/02/%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E6%95%B0%E7%BB%84%E7%BB%84%E5%90%88%E7%AE%97%E6%B3%95/" class="article-date">
+  <time datetime="2020-09-02T14:36:41.000Z" itemprop="datePublished">2020-09-02</time>
 </a>
       
   <div class="article-category">
@@ -62,7 +62,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">868字</span>
+            <span class="post-count">520字</span>
         </span>
     </span>
 
@@ -71,7 +71,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">3分钟</span>
+            <span class="post-count">2分钟</span>
         </span>
     </span>
 </div>
@@ -96,82 +96,16 @@
       
 
       
-      <a id="more"></a>
+      <h4 id="用递归实现数组的组合算法"><a href="#用递归实现数组的组合算法" class="headerlink" title="用递归实现数组的组合算法"></a>用递归实现数组的组合算法</h4><p>遇到一道题，设计数组的组合问题，于是简单写了一个关于数组组合的算法，比如：</p>
+<a id="more"></a>
 
-<h4 id="CORS-题目：前端在-foobar-com-向-api-foobar-com-发送请求-以下哪个请求不需要OPTIONS-preflight-以Chrome为准"><a href="#CORS-题目：前端在-foobar-com-向-api-foobar-com-发送请求-以下哪个请求不需要OPTIONS-preflight-以Chrome为准" class="headerlink" title="(CORS)题目：前端在 foobar.com, 向 api.foobar.com 发送请求, 以下哪个请求不需要OPTIONS preflight (以Chrome为准):"></a>(CORS)题目：前端在 foobar.com, 向 api.foobar.com 发送请求, 以下哪个请求不需要OPTIONS preflight (以Chrome为准):</h4><p>  A. 一个GET请求, 有Content-Type头, 值为application/json</p>
-<p>  B. 一个PUT请求, 没有头</p>
-<p>  C. 一个POST请求, 有User-Agent和Connection头</p>
-<p>  D. 一个HEAD请求, 有Authorization头</p>
-<hr>
-<p>答案：C</p>
-<p>解析：涉及CORS简单请求/复杂请求相关问题</p>
-<p>A：设置Content-Type为application/json，不属于简单请求限制的三个消息头：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">application/x-www-form-urlencoded</span><br><span class="line">multipart/form-data</span><br><span class="line">text/plain</span><br></pre></td></tr></table></figure>
+<p>[1,2,3,4]按照每3个数进行组合则可以组合为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[1,2,3]</span><br><span class="line">[1,2,4]</span><br><span class="line">[1,3,4]</span><br><span class="line">[2,3,4]</span><br></pre></td></tr></table></figure>
 
-<p>故为复杂请求</p>
-<p>B：put本身为复杂请求</p>
-<p>C：关于User-Agent参考w3.org中<a href="https://fetch.spec.whatwg.org/#no-cors-safelisted-request-header-name" target="_blank" rel="noopener">no-CORS-safelisted request-header name</a>可得知：</p>
-<p><img src="https://pic.downk.cc/item/5f4e3b41160a154a679c99df.png" alt=""></p>
-<p>connection为非CORS限制，所以即选C</p>
-<p>D：设置Authorization同样会导致跨域问题</p>
-<p>资料参考：</p>
-<p><a href="http://www.ruanyifeng.com/blog/2016/04/cors.html" target="_blank" rel="noopener">阮一峰 CORS</a>，<a href="https://fetch.spec.whatwg.org/#no-cors-safelisted-request-header-name" target="_blank" rel="noopener">w3.org</a></p>
-<hr>
-<h4 id="SSR-题目：以下哪个不是服务器端渲染SSR的问题"><a href="#SSR-题目：以下哪个不是服务器端渲染SSR的问题" class="headerlink" title="(SSR)题目：以下哪个不是服务器端渲染SSR的问题:"></a>(SSR)题目：以下哪个不是服务器端渲染SSR的问题:</h4><p>  A. 性能开销大</p>
-<p>  B. 缓存机制复杂</p>
-<p>  C. 框架支持不完善</p>
-<p>  D. 搜索引擎不执行JS</p>
-<hr>
-<p>答案：D</p>
-<p>解析：由服务端渲染SSR的优缺点可以看出</p>
-<p>SSR的优点：</p>
-<ol>
-<li>SEO友好</li>
-<li>首屏加载快</li>
-</ol>
-<p>SSR的缺点：</p>
-<ol>
-<li>服务器压力大，考虑服务器端负载。</li>
-<li>开发条件受限</li>
-</ol>
-<p>资料参考：</p>
-<p><a href="http://www.likecs.com/default/index/show?id=61364" target="_blank" rel="noopener">对比分析–浅析SSR(服务端渲染)和SPA(客户端渲染)</a></p>
-<hr>
-<h4 id="redux-题目：以下关于Redux-错误的是："><a href="#redux-题目：以下关于Redux-错误的是：" class="headerlink" title="(redux)题目：以下关于Redux, 错误的是："></a>(redux)题目：以下关于Redux, 错误的是：</h4><p>  A. Reducer中不能做异步操作</p>
-<p>  B. Redux store可以从js文件export并在任意位置使用</p>
-<p>  C. 使用Redux时需要先引入React依赖</p>
-<p>  D. Redux用于应用的状态管理</p>
-<hr>
-<p>答案：C</p>
-<p>解析： 分析Redux</p>
-<p>C：Redux 除了和 React 一起用外，还支持其它界面库。 它体小精悍（只有 2kB，包括依赖），故错误</p>
-<hr>
-<h4 id="https-ssl-tls-问题：关于HTTPS-SSL-TLS-以下错误的是："><a href="#https-ssl-tls-问题：关于HTTPS-SSL-TLS-以下错误的是：" class="headerlink" title="(https/ssl/tls)问题：关于HTTPS / SSL / TLS, 以下错误的是："></a>(https/ssl/tls)问题：关于HTTPS / SSL / TLS, 以下错误的是：</h4><p>  A. 当客户端收到服务器端发送的证书, 证书充当公钥. 为了验证证书有效性, 用客户端已经安装的CA证书检查</p>
-<p>  B. 后续的HTTPS通讯, 客户端和服务器端的通讯会使用非对称加密</p>
-<p>  C. 公司内网需要监控解密HTTPS时, 可以在客户端安装公司自己的CA证书</p>
-<p>  D. 最常用的非对称加密算法RSA, 是基于大素数分解质因数实现的</p>
-<hr>
-<p>答案：B</p>
-<p>解析：</p>
-<p>A：当客户端通过https访问时，服务器就把该证书（只有公钥）发给客户端，客户在自己已安装的CA中判断该证书是否可信。</p>
-<p>B： HTTPS 在内容传输的加密上使用的是对称加密，非对称加密只作用在证书验证阶段，所以选B，因为非对称加密效率极低，只适合前期秘钥的交换</p>
-<p>C：没问题</p>
-<p>D：参考<a href="https://www.jianshu.com/p/5949928b147f" target="_blank" rel="noopener">RSA算法</a></p>
-<p>参考资料：</p>
-<p><a href="http://www.ruanyifeng.com/blog/2014/09/illustration-ssl.html" target="_blank" rel="noopener">图解SSL/TLS协议</a></p>
-<p><a href="https://www.cnblogs.com/waytofall/p/5252471.html" target="_blank" rel="noopener">TLS协议扫盲（握手，非对称加密，证书，电子签名等）</a></p>
-<p><a href="https://www.cnblogs.com/imstudy/p/12015889.html" target="_blank" rel="noopener">你知道，HTTPS用的是对称加密还是非对称加密？</a></p>
-<hr>
-<h4 id="自定义html-问题：关于HTML自定义标签-错误的是"><a href="#自定义html-问题：关于HTML自定义标签-错误的是" class="headerlink" title="(自定义html)问题：关于HTML自定义标签, 错误的是:"></a>(自定义html)问题：关于HTML自定义标签, 错误的是:</h4><p>  A. <greeting></greeting> 这段HTML代码是合法的, 可以被正常展示</p>
-<p>  B. HTML自定义标签可以应用CSS</p>
-<p>  C. HTML自定义标签可以用JS操作</p>
-<p>  D. 已知的HTML自定义标签才能应用CSS, 以及用JS操作. 未知的HTML标签会成为HTMLUnknownElement的实例</p>
-<hr>
-<p>答案：D</p>
-<p>解析：</p>
-<p>HTML自定义标签可以定义CSS，可以被正常解析，可以使用JS进行操作，会变成HTMLUnknownElement实例</p>
-<p>参考：</p>
-<p><a href="https://blog.csdn.net/ysx77/article/details/74508217" target="_blank" rel="noopener">HTML 自定义元素教程</a></p>
+<p>这4种情况。</p>
+<p>JavaScript实现如下，该算法并未进行优化，后期有空再优化：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">/*</span></span><br><span class="line"><span class="comment">  * 组合算法</span></span><br><span class="line"><span class="comment">  * 根据所需数量对数组进行组合，返回组合后的结果</span></span><br><span class="line"><span class="comment">  * @param arr: 传入要组合的数组</span></span><br><span class="line"><span class="comment">  * @param num: 组合的数量 - eg:3就是3个一组</span></span><br><span class="line"><span class="comment">  * @param arr_compose: 组合的结果 传[]</span></span><br><span class="line"><span class="comment">  * </span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">composeArr</span>(<span class="params">arr,num,arr_compose</span>)</span>&#123;  </span><br><span class="line">      <span class="keyword">if</span>(num &gt; arr.length &amp;&amp; arr_compose == <span class="number">0</span>) <span class="keyword">return</span> <span class="string">"参数错误，超过数组长度，无法组合"</span>;</span><br><span class="line">      <span class="keyword">if</span>(num == arr.length &amp;&amp; arr_compose == <span class="number">0</span>) <span class="keyword">return</span> arr;</span><br><span class="line">      <span class="comment">//存放组合的结果</span></span><br><span class="line">      <span class="keyword">let</span> arrs = []; </span><br><span class="line">      <span class="comment">//是否组合完成</span></span><br><span class="line">      <span class="keyword">let</span> isResult = <span class="literal">false</span>;</span><br><span class="line">      <span class="comment">//   要按照多少个数字进行组合</span></span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span> ; i &lt; num ; i++)&#123;  </span><br><span class="line">          arrs.push(arr[i]); </span><br><span class="line">          <span class="comment">//排个序</span></span><br><span class="line">          arrs.sort();</span><br><span class="line">          <span class="keyword">if</span>(arr[i+<span class="number">1</span>])&#123;</span><br><span class="line">            <span class="comment">//如果不为undefined，则说明还可以继续替换，执行换位操作 ， 将第二位与最后一位进行换位然后与第一位组合</span></span><br><span class="line">            arr[i+<span class="number">1</span>] = arr.splice(arr.length<span class="number">-1</span> , <span class="number">1</span> , arr[i+<span class="number">1</span>])[<span class="number">0</span>];</span><br><span class="line">          &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="comment">//如果为undefined说明情况只剩一种，将终止递归的标志标识为true</span></span><br><span class="line">              isResult = <span class="literal">true</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125; </span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">let</span> i =<span class="number">0</span> ; i &lt; arr_compose.length ; i ++)&#123;  </span><br><span class="line">        <span class="comment">//   判断已组合的数组中是否有项重复 如果有重复说明该项组合完毕 </span></span><br><span class="line">          <span class="keyword">if</span>(arr_compose[i].join(<span class="string">""</span>) == arrs.join(<span class="string">""</span>))&#123; </span><br><span class="line">                <span class="comment">//  重复项删除 </span></span><br><span class="line">                arr_compose.splice(i,<span class="number">1</span>);</span><br><span class="line">                <span class="comment">//  说明该数字已经组合完毕，删除</span></span><br><span class="line">                arr.splice(<span class="number">0</span>,<span class="number">1</span>);</span><br><span class="line">          &#125;</span><br><span class="line">      &#125; </span><br><span class="line">        <span class="comment">//   将组合结果push进数组</span></span><br><span class="line">      arr_compose.push(arrs);  </span><br><span class="line">      <span class="keyword">if</span>(isResult)&#123;</span><br><span class="line">          <span class="keyword">return</span> arr_compose;</span><br><span class="line">      &#125;  </span><br><span class="line">      <span class="keyword">return</span> composeArr(arr ,num, arr_compose);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//封装成一个看似美好的函数形式</span></span><br><span class="line">  <span class="keyword">let</span> ComponseFunc = <span class="function">(<span class="params">arr , num</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> composeArr(arr ,num ,[])</span><br><span class="line">  &#125; </span><br><span class="line">  <span class="keyword">let</span> result = ComponseFunc([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>] , <span class="number">4</span>)</span><br><span class="line">  <span class="built_in">console</span>.log(result)</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">(5) [Array(4), Array(4), Array(4), Array(4), Array(4)]</span></span><br><span class="line"><span class="comment">0: (4) [1, 2, 4, 5]</span></span><br><span class="line"><span class="comment">1: (4) [1, 3, 4, 5]</span></span><br><span class="line"><span class="comment">2: (4) [1, 2, 3, 4]</span></span><br><span class="line"><span class="comment">3: (4) [1, 2, 3, 5]</span></span><br><span class="line"><span class="comment">4: (4) [2, 3, 4, 5]</span></span><br><span class="line"><span class="comment">length: 5</span></span><br><span class="line"><span class="comment">__proto__: Array(0)</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
 
       
       <!-- reward -->
@@ -241,14 +175,14 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://negronis.github.io/2020/09/01/%E8%AE%B0%E5%BD%95%E5%87%A0%E9%81%93%E9%A2%98/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://negronis.github.io/2020/09/02/%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E6%95%B0%E7%BB%84%E7%BB%84%E5%90%88%E7%AE%97%E6%B3%95/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
 
 
     </footer>
@@ -259,19 +193,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/09/02/%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E6%95%B0%E7%BB%84%E7%BB%84%E5%90%88%E7%AE%97%E6%B3%95/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            递归实现数组组合算法
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/08/28/%E5%9F%BA%E4%BA%8EH5%E7%9A%84%E4%BB%BF%E5%BE%AE%E4%BF%A1Vue%E6%8F%92%E4%BB%B6/" class="article-nav-link">
+      <a href="/2020/09/01/%E8%AE%B0%E5%BD%95%E5%87%A0%E9%81%93%E9%A2%98/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">基于H5的仿微信Vue插件</div>
+        <div class="article-nav-title">记录几道题</div>
       </a>
     
   </nav>
