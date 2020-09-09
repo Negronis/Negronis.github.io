@@ -96,15 +96,15 @@
       
 
       
-      <a id="more"></a>
-
-<h4 id="CORS-题目：前端在-foobar-com-向-api-foobar-com-发送请求-以下哪个请求不需要OPTIONS-preflight-以Chrome为准"><a href="#CORS-题目：前端在-foobar-com-向-api-foobar-com-发送请求-以下哪个请求不需要OPTIONS-preflight-以Chrome为准" class="headerlink" title="(CORS)题目：前端在 foobar.com, 向 api.foobar.com 发送请求, 以下哪个请求不需要OPTIONS preflight (以Chrome为准):"></a>(CORS)题目：前端在 foobar.com, 向 api.foobar.com 发送请求, 以下哪个请求不需要OPTIONS preflight (以Chrome为准):</h4><p>  A. 一个GET请求, 有Content-Type头, 值为application/json</p>
+      <h4 id="CORS-题目：前端在-foobar-com-向-api-foobar-com-发送请求-以下哪个请求不需要OPTIONS-preflight-以Chrome为准"><a href="#CORS-题目：前端在-foobar-com-向-api-foobar-com-发送请求-以下哪个请求不需要OPTIONS-preflight-以Chrome为准" class="headerlink" title="(CORS)题目：前端在 foobar.com, 向 api.foobar.com 发送请求, 以下哪个请求不需要OPTIONS preflight (以Chrome为准):"></a>(CORS)题目：前端在 foobar.com, 向 api.foobar.com 发送请求, 以下哪个请求不需要OPTIONS preflight (以Chrome为准):</h4><p>  A. 一个GET请求, 有Content-Type头, 值为application/json</p>
 <p>  B. 一个PUT请求, 没有头</p>
 <p>  C. 一个POST请求, 有User-Agent和Connection头</p>
 <p>  D. 一个HEAD请求, 有Authorization头</p>
 <hr>
 <p>答案：C</p>
 <p>解析：涉及CORS简单请求/复杂请求相关问题</p>
+<a id="more"></a>
+
 <p>A：设置Content-Type为application/json，不属于简单请求限制的三个消息头：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">application/x-www-form-urlencoded</span><br><span class="line">multipart/form-data</span><br><span class="line">text/plain</span><br></pre></td></tr></table></figure>
 
