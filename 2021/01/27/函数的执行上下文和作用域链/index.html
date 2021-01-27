@@ -6,7 +6,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Electron+sqlite3.js实现本地数据库 |  Negroni&#39;s blog
+    函数的执行上下文和作用域链 |  Negroni&#39;s blog
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -30,7 +30,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-Electron-sqlite3-js实现本地数据库" class="article article-type-post" itemscope
+  <article id="post-函数的执行上下文和作用域链" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -38,7 +38,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  Electron+sqlite3.js实现本地数据库
+  函数的执行上下文和作用域链
 </h1>
   
 
@@ -47,12 +47,12 @@
 
     
     <div class="article-meta">
-      <a href="/2020/12/14/Electron-sqlite3-js%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E6%95%B0%E6%8D%AE%E5%BA%93/" class="article-date">
-  <time datetime="2020-12-14T11:16:01.000Z" itemprop="datePublished">2020-12-14</time>
+      <a href="/2021/01/27/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/" class="article-date">
+  <time datetime="2021-01-27T11:55:22.000Z" itemprop="datePublished">2021-01-27</time>
 </a>
       
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
   </div>
 
       
@@ -62,7 +62,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">226字</span>
+            <span class="post-count">934字</span>
         </span>
     </span>
 
@@ -71,7 +71,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">1分钟</span>
+            <span class="post-count">3分钟</span>
         </span>
     </span>
 </div>
@@ -96,24 +96,74 @@
       
 
       
-      <h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>NPM：<a href="https://www.npmjs.com/package/sqlite3" target="_blank" rel="noopener">sqlite3.js</a></p>
-<p>GITHUB：<a href="https://github.com/mapbox/node-sqlite3" target="_blank" rel="noopener">sqlite3Github</a></p>
-<a id="more"></a> 
+      <h4 id="概念解释："><a href="#概念解释：" class="headerlink" title="概念解释："></a>概念解释：</h4><table>
+<thead>
+<tr>
+<th align="left">概念</th>
+<th align="left">意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">执行上下文[execution context]</td>
+<td align="left">描述JavaScript代码执行的抽象概念，所有JavaScript代码都是在某个执行上下文中运行的</td>
+</tr>
+<tr>
+<td align="left">激活对象[activeation]</td>
+<td align="left">进入新的执行上下文时创建出来，与新的执行上下文关联</td>
+</tr>
+<tr>
+<td align="left">作用域链[scope chain]</td>
+<td align="left">由对象列表或者对象链组成，构成了函数调用上下文环境的作用域</td>
+</tr>
+<tr>
+<td align="left">arguments</td>
+<td align="left">内部存储函数参数的类数组</td>
+</tr>
+<tr>
+<td align="left">内部属性[scope]</td>
+<td align="left">由对象列表或对象链组成，构成了函数调用上下环境的作用域</td>
+</tr>
+<tr>
+<td align="left">词法作用域</td>
+<td align="left">函数定义时根据函数代码嵌套关系而确定的作用域</td>
+</tr>
+<tr>
+<td align="left">动态作用域</td>
+<td align="left">函数执行时根据调用随时调整的作用域</td>
+</tr>
+</tbody></table>
+<a id="more"></a>
 
-<h4 id="建立数据库"><a href="#建立数据库" class="headerlink" title="建立数据库"></a>建立数据库</h4><p>可以在sql.js提供的GUI上建立一个.db文件保存：<a href="https://sql.js.org/examples/GUI/" target="_blank" rel="noopener">GUI</a></p>
-<p>也可以使用SQLiteStudio创建（推荐）</p>
-<h4 id="引入sqlite3并初始化db数据库"><a href="#引入sqlite3并初始化db数据库" class="headerlink" title="引入sqlite3并初始化db数据库"></a>引入sqlite3并初始化db数据库</h4><p>新建一个electron项目，将.db文件放在sql文件夹下</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sqlite3 = <span class="built_in">require</span>(<span class="string">'sqlite3'</span>).verbose();</span><br><span class="line"><span class="keyword">var</span> db = <span class="keyword">new</span> sqlite3.Database(<span class="string">'./sql/mySql.db'</span>, (err) =&gt; &#123;</span><br><span class="line">   <span class="keyword">if</span> (err) &#123;</span><br><span class="line">      <span class="built_in">console</span>.error(err);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h4 id="详解"><a href="#详解" class="headerlink" title="详解"></a>详解</h4><h5 id="执行上下文栈是如何形成的？"><a href="#执行上下文栈是如何形成的？" class="headerlink" title="执行上下文栈是如何形成的？"></a>执行上下文栈是如何形成的？</h5><p><img src="C:%5CUsers%5CAdministrator%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1611718093612.png" alt="1611718093612"></p>
+<p> 代码实例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">one</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">   two();</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">"1"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">two</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">   three();</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">"2"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">three</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">"3"</span>);</span><br><span class="line">&#125;</span><br><span class="line">one();   </span><br><span class="line"><span class="comment">// 3 2 1</span></span><br></pre></td></tr></table></figure>
 
-<h4 id="写sql语句"><a href="#写sql语句" class="headerlink" title="写sql语句"></a>写sql语句</h4><p>首先需要连接数据库：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">db.serialize(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">//写sql语句</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>执行上下文是栈，根据栈的规则后进先出，栈中最顶永远是全局执行上下文window。</p>
+<p>当函数被多次调用的时候，也会创建新的上下文。</p>
+<h5 id="进入新执行上下文时会执行的操作"><a href="#进入新执行上下文时会执行的操作" class="headerlink" title="进入新执行上下文时会执行的操作"></a>进入新执行上下文时会执行的操作</h5><p>1.首先创建一个激活对象，包含arguments属性，无法被访问，但是可以访问arguments，与新执行上下文关联。</p>
+<p>2.创建一个作用域链-内部属性[scope]，具体值与函数的创建方式有关，将激活对象添加到函数的[[scope]]前面。</p>
+<p>3.初始化函数需要的变量(实参，内部function，局部变量)，局部变量仅创建同名属性，值为undefined，全局JavaScript代码在全局上下文执行，作用域链仅包括全局对象一个。</p>
+<h5 id="创建上下文环境过程中，JavaScript遵循的运行规则"><a href="#创建上下文环境过程中，JavaScript遵循的运行规则" class="headerlink" title="创建上下文环境过程中，JavaScript遵循的运行规则"></a>创建上下文环境过程中，JavaScript遵循的运行规则</h5><p>1.根据传参创建<font color=red>调用对象</font>(另一种运行机制，没有原型，不能被引用)</p>
+<p>2.调用对象创建参数对象，存储参数变量(创建Arguments对象，内部存储调用函数时传递的参数)</p>
+<p>3.创建对象属性，存储函数定义的局部变量(创建arguments属性，引用创建好的Arguments对象)</p>
+<p>4.将调用对象放在作用域头部(分配作用域的时候，调用对象被添加到作用域链头部)</p>
+<p>5.执行函数结构体内的语句(对函数内创建的变量执行实例化，转化为调用对象的属性，形参也创建为调用对象的命名属性，传递一直则赋值，否则赋值undefined，函数体内代码执行前不会进行局部变量真正实例化，最后创建this指向对象引用，null为window)</p>
+<p>6.返回函数返回值</p>
+<p>当创建全局作用域时，由于上下文环境为window，所以不需要定义通过调用对象来引用这些参数。</p>
+<h5 id="词法作用域和动态作用域"><a href="#词法作用域和动态作用域" class="headerlink" title="词法作用域和动态作用域"></a>词法作用域和动态作用域</h5><p>词法作用域：函数被调用之前通过函数内嵌套关系确定函数的作用域，其作用域取决于源代码，编译器可以通过它来确定标识符的实际引用，JavaScript函数运行在词法作用域中。</p>
+<p>动态作用域：函数被调用之后的作用域，其作用域链会根据调用跟调整。</p>
+<h5 id="函数的三种定义方法"><a href="#函数的三种定义方法" class="headerlink" title="函数的三种定义方法"></a>函数的三种定义方法</h5><p>1.函数声明</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h4><p>注意：数据库操作是异步，推荐Promise异步流程控制</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> query = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">   <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      db.serialize(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">         db.all(<span class="string">"SELECT * FROM TABLENAME"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, row</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (err) &#123;</span><br><span class="line">               reject(err);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (row.length === <span class="number">0</span>) &#123; </span><br><span class="line">               resolve(<span class="literal">false</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">               resolve(row);</span><br><span class="line">            &#125;</span><br><span class="line">         &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line">   &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2.函数表达式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">db.serialize(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">   db.exec(<span class="string">`UPDATE TABLENAME SET xx=1 WHERE xx=xx`</span>, (err) =&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span> (err) &#123;</span><br><span class="line">         <span class="keyword">return</span> error(err);</span><br><span class="line">      &#125;</span><br><span class="line">      log(<span class="string">"数据更新完成"</span>);</span><br><span class="line">   &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>3.Function构造器</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="keyword">new</span> <span class="built_in">Function</span>(arg,body)</span><br></pre></td></tr></table></figure>
 
-<h4 id="新增的执行方法同修改。"><a href="#新增的执行方法同修改。" class="headerlink" title="新增的执行方法同修改。"></a>新增的执行方法同修改。</h4>
+<h5 id="function对象的length属性可以获得function的形参个数"><a href="#function对象的length属性可以获得function的形参个数" class="headerlink" title="function对象的length属性可以获得function的形参个数"></a>function对象的length属性可以获得function的形参个数</h5><p>参考文章：</p>
+<p>[Javascript闭包：从理论到实现，[[Scopes]]的每一根毛都看得清清楚楚](</p>
+
       
       <!-- reward -->
       
@@ -182,14 +232,14 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://negronis.github.io/2020/12/14/Electron-sqlite3-js%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E6%95%B0%E6%8D%AE%E5%BA%93/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://negronis.github.io/2021/01/27/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Electron/" rel="tag">Electron</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
 
 
     </footer>
@@ -200,19 +250,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2021/01/27/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            函数的执行上下文和作用域链
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/10/24/Angular%E6%A6%82%E8%A6%81/" class="article-nav-link">
+      <a href="/2020/12/14/Electron-sqlite3-js%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E6%95%B0%E6%8D%AE%E5%BA%93/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Angular概要</div>
+        <div class="article-nav-title">Electron+sqlite3.js实现本地数据库</div>
       </a>
     
   </nav>

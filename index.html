@@ -69,6 +69,114 @@
     
     
     
+    <article id="post-函数的执行上下文和作用域链" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2021/01/27/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/"
+    >函数的执行上下文和作用域链</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/01/27/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/" class="article-date">
+  <time datetime="2021-01-27T11:55:22.000Z" itemprop="datePublished">2021-01-27</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h4 id="概念解释："><a href="#概念解释：" class="headerlink" title="概念解释："></a>概念解释：</h4><table>
+<thead>
+<tr>
+<th align="left">概念</th>
+<th align="left">意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">执行上下文[execution context]</td>
+<td align="left">描述JavaScript代码执行的抽象概念，所有JavaScript代码都是在某个执行上下文中运行的</td>
+</tr>
+<tr>
+<td align="left">激活对象[activeation]</td>
+<td align="left">进入新的执行上下文时创建出来，与新的执行上下文关联</td>
+</tr>
+<tr>
+<td align="left">作用域链[scope chain]</td>
+<td align="left">由对象列表或者对象链组成，构成了函数调用上下文环境的作用域</td>
+</tr>
+<tr>
+<td align="left">arguments</td>
+<td align="left">内部存储函数参数的类数组</td>
+</tr>
+<tr>
+<td align="left">内部属性[scope]</td>
+<td align="left">由对象列表或对象链组成，构成了函数调用上下环境的作用域</td>
+</tr>
+<tr>
+<td align="left">词法作用域</td>
+<td align="left">函数定义时根据函数代码嵌套关系而确定的作用域</td>
+</tr>
+<tr>
+<td align="left">动态作用域</td>
+<td align="left">函数执行时根据调用随时调整的作用域</td>
+</tr>
+</tbody></table>
+      
+      <a class="article-more-link" href="/2021/01/27/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/">阅读更多...</a>
+      
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-Electron-sqlite3-js实现本地数据库" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -736,86 +844,13 @@
 
 </article>
     
-    <article id="post-React-Router-5路由守卫编写" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/08/React-Router-5%E8%B7%AF%E7%94%B1%E5%AE%88%E5%8D%AB%E7%BC%96%E5%86%99/"
-    >React-Router 5路由守卫编写</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/09/08/React-Router-5%E8%B7%AF%E7%94%B1%E5%AE%88%E5%8D%AB%E7%BC%96%E5%86%99/" class="article-date">
-  <time datetime="2020-09-08T14:32:18.000Z" itemprop="datePublished">2020-09-08</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h3 id="编写一个ReactRouter路由守卫"><a href="#编写一个ReactRouter路由守卫" class="headerlink" title="编写一个ReactRouter路由守卫"></a>编写一个ReactRouter路由守卫</h3><p>React-router很强大， 但是文档是纯英文而且不直接提供类似Vue的路由守卫，所以需要手写路由守卫，下面是一个写法，可参考。</p>
-      
-      <a class="article-more-link" href="/2020/09/08/React-Router-5%E8%B7%AF%E7%94%B1%E5%AE%88%E5%8D%AB%E7%BC%96%E5%86%99/">阅读更多...</a>
-      
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
   </nav>
   
 </section>
@@ -826,7 +861,7 @@
     <ul class="list-inline">
       <li>
         &copy;
-        2019-2020
+        2019-2021
         Jiayu Fan
       </li>
       <li>
