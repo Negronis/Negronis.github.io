@@ -69,6 +69,92 @@
     
     
     
+    <article id="post-《Web性能优化实战》历程" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2021/03/29/%E3%80%8AWeb%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%98%E3%80%8B%E5%8E%86%E7%A8%8B/"
+    >《Web性能优化实战》历程</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/03/29/%E3%80%8AWeb%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%98%E3%80%8B%E5%8E%86%E7%A8%8B/" class="article-date">
+  <time datetime="2021-03-29T12:36:36.000Z" itemprop="datePublished">2021-03-29</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h2 id="《Web性能优化实战》历程"><a href="#《Web性能优化实战》历程" class="headerlink" title="《Web性能优化实战》历程"></a>《Web性能优化实战》历程</h2><h3 id="Web优化"><a href="#Web优化" class="headerlink" title="Web优化"></a>Web优化</h3><p>每个终端对于网站的响应速度是不同的，不同的DPI对网站响应速度也是不同的，其速率一般可以简化为以下规律：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">桌面端高dpi &gt; 移动端高dpi &gt; 桌面端 &gt; 移动端</span><br></pre></td></tr></table></figure>
+
+<h4 id="代码优化"><a href="#代码优化" class="headerlink" title="代码优化"></a>代码优化</h4><h5 id="缩小资源"><a href="#缩小资源" class="headerlink" title="缩小资源"></a>缩小资源</h5><p>原理：基于排除编码中所有空白和非必要字符串的过程，且不会影响资源工作方式的优化。</p>
+<p>现有基于webpack打包技术，所以这块可忽略。</p>
+<p>如果不想使用webpack，那么可以使用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g minifier html-minify</span><br></pre></td></tr></table></figure>
+
+<p>使用也很简单：</p>
+<p>-o参数指定输出文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//压缩css</span></span><br><span class="line">minify -o styles.min.css styles.css</span><br><span class="line"><span class="comment">//压缩js</span></span><br><span class="line">minify -o jquery.min.js jquery.js</span><br><span class="line"><span class="comment">//压缩html</span></span><br><span class="line">htmlminify -o index.html index.src.html</span><br></pre></td></tr></table></figure>
+
+<p>但是不推荐使用，该插件官方说明如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">This should be considered deprecated. I simply have neither the time or interest in keeping it up-to-date.</span><br><span class="line"></span><br><span class="line">For alternatives, consider less or sass for the CSS part. I prefer less because it is more lightweight, but both are good options and serve much of the same purpose.</span><br><span class="line"></span><br><span class="line">For JS, you can either use uglify directly (this project is already just a thin wrapper around uglify). Alternatively, look to bundlers like webpack, but there are tons of different ones.</span><br></pre></td></tr></table></figure>
+      
+      <a class="article-more-link" href="/2021/03/29/%E3%80%8AWeb%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%98%E3%80%8B%E5%8E%86%E7%A8%8B/">阅读更多...</a>
+      
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-函数的执行上下文和作用域链" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -754,80 +840,6 @@
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Electron/" rel="tag">Electron</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-React-Context" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/09/React-Context/"
-    >React-Context</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/09/09/React-Context/" class="article-date">
-  <time datetime="2020-09-09T13:21:47.000Z" itemprop="datePublished">2020-09-09</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h3 id="React-Context"><a href="#React-Context" class="headerlink" title="React-Context"></a>React-Context</h3><p>类似广播功能</p>
-<p>可以无视props进行值传递，多用于共用值：</p>
-      
-      <a class="article-more-link" href="/2020/09/09/React-Context/">阅读更多...</a>
-      
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li></ul>
 
 
     </footer>
