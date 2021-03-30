@@ -69,6 +69,158 @@
     
     
     
+    <article id="post-async封装一个请求拼接器" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/08/async%E5%B0%81%E8%A3%85%E4%B8%80%E4%B8%AA%E8%AF%B7%E6%B1%82%E6%8B%BC%E6%8E%A5%E5%99%A8/"
+    >async封装一个请求拼接器</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/10/08/async%E5%B0%81%E8%A3%85%E4%B8%80%E4%B8%AA%E8%AF%B7%E6%B1%82%E6%8B%BC%E6%8E%A5%E5%99%A8/" class="article-date">
+  <time datetime="2020-10-08T15:53:41.000Z" itemprop="datePublished">2020-10-08</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h4 id="复习async使用，写一个可以接受复数请求并将结果拼接成一个数组的拼接器："><a href="#复习async使用，写一个可以接受复数请求并将结果拼接成一个数组的拼接器：" class="headerlink" title="复习async使用，写一个可以接受复数请求并将结果拼接成一个数组的拼接器："></a>复习async使用，写一个可以接受复数请求并将结果拼接成一个数组的拼接器：</h4>
+      
+      <a class="article-more-link" href="/2020/10/08/async%E5%B0%81%E8%A3%85%E4%B8%80%E4%B8%AA%E8%AF%B7%E6%B1%82%E6%8B%BC%E6%8E%A5%E5%99%A8/">阅读更多...</a>
+      
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ECMAscript7/" rel="tag">ECMAscript7</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-Electron常用方法" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/13/Electron%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/"
+    >Electron常用方法</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/09/13/Electron%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" class="article-date">
+  <time datetime="2020-09-13T04:20:28.000Z" itemprop="datePublished">2020-09-13</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <hr>
+<p>关于remote = undefined问题：</p>
+<p>BrowserWindow的默认为关闭remote</p>
+<p>初始化时开启即可：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">win =  <span class="keyword">new</span> BrowserWindow(&#123;</span><br><span class="line">  width:<span class="number">800</span> ,</span><br><span class="line">  height:<span class="number">600</span> ,</span><br><span class="line">  minWidth:<span class="number">800</span>,</span><br><span class="line">  minHeight:<span class="number">600</span>,</span><br><span class="line">  maxWidth:<span class="number">1000</span>,</span><br><span class="line">  maxHeight:<span class="number">800</span>,</span><br><span class="line">  webPreferences:&#123;</span><br><span class="line">    nodeIntegration:<span class="literal">true</span>,</span><br><span class="line">    enableRemoteModule:<span class="literal">true</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<hr>
+      
+      <a class="article-more-link" href="/2020/09/13/Electron%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/">阅读更多...</a>
+      
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Electron/" rel="tag">Electron</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-React-Context" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -646,157 +798,6 @@
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/canvas/" rel="tag">canvas</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-算法基础练习-帕斯卡三角递归实现" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/04/27/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80%E7%BB%83%E4%B9%A0-%E5%B8%95%E6%96%AF%E5%8D%A1%E4%B8%89%E8%A7%92%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0/"
-    >算法基础练习-帕斯卡三角递归实现</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/04/27/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80%E7%BB%83%E4%B9%A0-%E5%B8%95%E6%96%AF%E5%8D%A1%E4%B8%89%E8%A7%92%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0/" class="article-date">
-  <time datetime="2020-04-27T14:28:19.000Z" itemprop="datePublished">2020-04-27</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <p><strong>计算帕斯卡三角</strong></p>
-<p>这玩意长这样：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">      <span class="number">1</span></span><br><span class="line">    <span class="number">1</span>   <span class="number">1</span></span><br><span class="line">  <span class="number">1</span>   <span class="number">2</span>   <span class="number">1</span>	</span><br><span class="line"><span class="number">1</span>   <span class="number">3</span>   <span class="number">3</span>  <span class="number">1</span></span><br><span class="line"> <span class="number">1</span>   <span class="number">4</span>   <span class="number">6</span>   <span class="number">4</span>  <span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p>边界是1，内部数是位于上面两个数之和。</p>
-      
-      <a class="article-more-link" href="/2020/04/27/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80%E7%BB%83%E4%B9%A0-%E5%B8%95%E6%96%AF%E5%8D%A1%E4%B8%89%E8%A7%92%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0/">阅读更多...</a>
-      
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-数据结构与算法-栈" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/04/18/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%A0%88/"
-    >数据结构与算法 - 栈</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/04/18/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%A0%88/" class="article-date">
-  <time datetime="2020-04-18T11:00:23.000Z" itemprop="datePublished">2020-04-18</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h6 id="实现一个基本的栈"><a href="#实现一个基本的栈" class="headerlink" title="实现一个基本的栈"></a>实现一个基本的栈</h6><ol>
-<li>遵循后进先出原则：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Stack</span></span>&#123;</span><br><span class="line">				<span class="keyword">constructor</span>() &#123;</span><br><span class="line">				    <span class="keyword">this</span>.item = [];</span><br><span class="line">				&#125;</span><br><span class="line">				push(e)&#123;</span><br><span class="line">					<span class="keyword">this</span>.item.push(e);</span><br><span class="line">				&#125;</span><br><span class="line">				pop()&#123;</span><br><span class="line">					<span class="keyword">this</span>.item.pop();</span><br><span class="line">				&#125;</span><br><span class="line">				peep()&#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="keyword">this</span>.item[<span class="number">0</span>];</span><br><span class="line">				&#125;</span><br><span class="line">				isEmpty()&#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="keyword">this</span>.item.length == <span class="number">0</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				clear()&#123;</span><br><span class="line">					<span class="keyword">this</span>.item = [];</span><br><span class="line">				&#125;</span><br><span class="line">				size()&#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="keyword">this</span>.item.length;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br></pre></td></tr></table></figure>
-      
-      <a class="article-more-link" href="/2020/04/18/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%A0%88/">阅读更多...</a>
-      
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6/" rel="tag">读书</a></li></ul>
 
 
     </footer>
