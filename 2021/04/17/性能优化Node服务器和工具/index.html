@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    性能优化Node服务器和工具 |  Negroni&#39;s blog
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-性能优化Node服务器和工具" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  性能优化Node服务器和工具
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96Node%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%B7%A5%E5%85%B7/" class="article-date">
+  <time datetime="2021-04-17T00:51:43.000Z" itemprop="datePublished">2021-04-17</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.1k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">4分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="node服务器优化"><a href="#node服务器优化" class="headerlink" title="node服务器优化"></a>node服务器优化</h3><h4 id="服务器压缩-compression模块"><a href="#服务器压缩-compression模块" class="headerlink" title="服务器压缩 - compression模块"></a>服务器压缩 - compression模块</h4><p>服务器压缩的工作方式是用户从服务器请求网页，用户的请求附带Accept-Encoding头，向服务器告知浏览器可以使用的压缩格式，如果服务器能够按照Accept-Encoding头中指示的内容进行编码，它将用一个描述压缩方式和压缩内容的Content-Encoding头部信息进行回复。</p>
+<a id="more"></a>
+
+<p>因为网站下载的大部分内容往往是文本，可压缩性很好，几乎所有通用的浏览器都支持一种名为gzip的压缩方式，它在减小文本资源体积方面非常有效。</p>
+<p><strong>Install</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install compression</span><br></pre></td></tr></table></figure>
+
+<p><strong>use</strong></p>
+<p>http.js:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">"express"</span>);</span><br><span class="line"><span class="keyword">const</span> compression = <span class="built_in">require</span>(<span class="string">"compression"</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"><span class="comment">// Run static server</span></span><br><span class="line">app.use(compression());</span><br><span class="line">app.use(express.static(__dirname));</span><br><span class="line">app.listen(<span class="number">8080</span>, () =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"8080端口已监听"</span>)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>性能对比：</strong></p>
+<p>使用compression前网站大小以及加载速度为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">7</span> requests</span><br><span class="line"><span class="number">376</span> kB transferred</span><br><span class="line"><span class="number">374</span> kB resources</span><br><span class="line">Finish: <span class="number">11.38</span> s</span><br><span class="line">DOMContentLoaded: <span class="number">11.40</span> s</span><br><span class="line">Load: <span class="number">11.40</span> s</span><br></pre></td></tr></table></figure>
+
+<p>使用后：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">7</span> requests</span><br><span class="line"><span class="number">173</span> kB transferred</span><br><span class="line"><span class="number">374</span> kB resources</span><br><span class="line">Finish: <span class="number">8.02</span> s</span><br><span class="line">DOMContentLoaded: <span class="number">5.72</span> s</span><br><span class="line">Load: <span class="number">8.02</span> s</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3><h4 id="基于Web"><a href="#基于Web" class="headerlink" title="基于Web"></a>基于Web</h4><p>❏ TinyPNGWeb版本的图像优化工具。通过用户友好的界面压缩PNG和JPEG。</p>
+<p>❏ PageSpeed Insights分析URL，并给出提升页面性能的建议。</p>
+<p>❏ Google Analytics提供关于网站访问者的数据。</p>
+<p>❏ Jank Invaders与其说是工具，不如说是游戏，可以帮助你了解jank的效果。非常适合训练眼睛捕捉迟缓的动画。</p>
+<p>❏ Mobile-Friendly Test分析URL并给出报告：网页设计是否适合移动端。</p>
+<p>❏ mydevice.io提供设备、屏幕分辨率和像素密度的综合列表。</p>
+<p>❏ VisualFold!书签工具（作者开发的！），将辅助线放在页面上的指定位置。</p>
+<p>❏ Grumpicon从SVG雪碧图生成PNG（以及其他很多格式）。</p>
+<p>❏ Can I Use提供浏览器功能及其支持级别的综合列表。</p>
+<h4 id="基于Node"><a href="#基于Node" class="headerlink" title="基于Node"></a>基于Node</h4><h5 id="Web服务器和中间件"><a href="#Web服务器和中间件" class="headerlink" title="Web服务器和中间件"></a>Web服务器和中间件</h5><p>❏ express一个小型的Web服务器框架，在本书中用于在本地主机上启动服务器以执行示例代码。</p>
+<p>❏ compression为基于Express的Web服务器提供gzip压缩。</p>
+<p>❏ shrink-ray基于compression修改、支持Brotli压缩的Express中间件。</p>
+<p>❏ mime用于检测本地文件系统上文件内容类型的模块。</p>
+<p>❏ spdy启用HTTP/2的Web服务器模块。</p>
+<h5 id="图像处理器和优化器"><a href="#图像处理器和优化器" class="headerlink" title="图像处理器和优化器"></a>图像处理器和优化器</h5><p>❏ svg-sprite在命令行生成SVG雪碧图。</p>
+<p>❏ imagemin图像优化库。</p>
+<p>❏ imagemin-jpeg-recompressimagemin插件，用于减小JPEG文件大小。</p>
+<p>❏ imagemin-optipngimagemin插件，用于减小PNG文件大小。</p>
+<p>❏ svgo用于减小SVG大小的命令行实用程序。</p>
+<p>❏ imagemin-webpimagemin插件，用于将图像转换成WebP格式。</p>
+<p>❏ imagemin-svgosvgo的imagemin封装。</p>
+<p>❏ imagemin-pngquant另一个imagemin插件，用于减小PNG文件大小。</p>
+<p>❏ imagemin-gifsicleimagemin插件，用于减小GIF文件大小。</p>
+<h5 id="缩小程序"><a href="#缩小程序" class="headerlink" title="缩小程序"></a>缩小程序</h5><p>❏ html-minify在命令行缩小HTML文件。</p>
+<p>❏ minifier在命令行缩小CSS和JavaScript文件。</p>
+<p>❏ uncss通过分析网站，删除CSS文件中未使用的规则。</p>
+<h5 id="字体转换工具"><a href="#字体转换工具" class="headerlink" title="字体转换工具"></a>字体转换工具</h5><p>❏ tt2eot将TrueType字体转换为Embedded OpenType。</p>
+<p>❏ tt2woff将TrueType字体转换为WOFF。</p>
+<p>❏ tt2woff2将TrueType字体转换为WOFF2。</p>
+<h5 id="PostCSS和PostCSS插件"><a href="#PostCSS和PostCSS插件" class="headerlink" title="PostCSS和PostCSS插件"></a>PostCSS和PostCSS插件</h5><p>❏ PostCSS用于转换CSS的Node程序。</p>
+<p>❏ Autoprefixer自动为CSS属性添加浏览器厂商前缀。</p>
+<p>❏ cssnanoCSS优化器，不仅能够最小化，还通过许多目标明确的优化来减少CSS。</p>
+<p>❏ autorem一个PostCSS插件（作者开发的！），用于将CSS中的px单位转换成rem单位。</p>
+<h5 id="其他工具"><a href="#其他工具" class="headerlink" title="其他工具"></a>其他工具</h5><p>❏ csscss基于Ruby的命令行工具，用于识别CSS中的冗余。</p>
+<p>❏ loadCSSFilament Group编写的库，用于加载CSS，同时不会阻塞渲染。</p>
+<p>❏ PicturefillFilament Group的Scott Jehl编写的<picture>元素的polyfill，支持srcset和sizes属性。</p>
+<p>❏ ModernizrJavaScript特性检测库。可以根据需要自定义，以检测尽可能多（或尽可能少）的功能。</p>
+<p>❏ fontTools基于Python的字体实用程序库。包含字体子集设置工具pyft-subset。</p>
+<p>❏ Font Face ObserverBram Stein编写的库，用于控制字体的加载和显示，其功能类似于基于浏览器的字体加载API。</p>
+<p>❏ Alameda小型的AMD模块/脚本加载器，使用JavaScriptpromise。</p>
+<p>❏ RequireJSAlameda的旧版本（虽然兼容性更好）。</p>
+<p>❏ Zepto一个轻量级兼容jQuery的替代方案。这个库是所有jQuery替代方案中功能最丰富的。</p>
+<p>❏ ShoestringFilament Group提供的兼容jQuery的替代品，更加轻量。❏ Sprint另一个轻量级的兼容jQuery的替代方案，速度非常快。</p>
+<p>❏ $.ajax的独立实现jQuery $.ajax方法的独立实现。</p>
+<p>❏ Fetch APIFetch API的polyfill。</p>
+<p>❏ Velocity.js基于requestAnimationFrame驱动实现的jQueryanimate方法。以类似的API提供更快的动画。</p>
+<p>各设备分辨率以及本机分辨率等：<a href="https://www.mydevice.io/" target="_blank" rel="noopener">https://www.mydevice.io/</a></p>
+
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong s>
+              本博客所有文章除特别声明外，均采用 <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="external nofollow"
+                target="_blank">Apache License 2.0</a> 许可协议。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://negronis.github.io/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96Node%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%B7%A5%E5%85%B7/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+    
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96Web%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E8%AF%84%E4%BC%B0/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">性能优化Web性能分析评估</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        Jiayu Fan
+      </li>
+      <li>
+        
+        Powered by
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Negroni&#39;s blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>在？来整活儿...</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['console.log(&#39;Hello World!&#39;);', '', ''],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+    
+  </div>
+</body>
+
+</html>

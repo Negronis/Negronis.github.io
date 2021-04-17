@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    性能优化HTTP2 |  Negroni&#39;s blog
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-性能优化HTTP2" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  性能优化HTTP2
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96HTTP2/" class="article-date">
+  <time datetime="2021-04-17T00:48:24.000Z" itemprop="datePublished">2021-04-17</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.6k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">9分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="HTTP-2"><a href="#HTTP-2" class="headerlink" title="HTTP/2"></a>HTTP/2</h3><h4 id="HTTP-1中的问题"><a href="#HTTP-1中的问题" class="headerlink" title="HTTP/1中的问题"></a>HTTP/1中的问题</h4><p>HTTP起源于1991年发明的HTTP/0.9。该协议最初是为一个更简单的电子文档Web而设计的，只能使用单一方法（GET）。这些用HTML编写的文档能够通过锚点标签链接到其他文档。HTTP/0.9协议很好地实现了这一目标。</p>
+<p>随着时间的推移，人们添加了两个具有额外功能和方法（例如提交表单数据的POST）的HTTP新实现。其版本号是v1.0和v1.1，它们在1996年标准化。此后不久，大多数浏览器增加了对其的支持。</p>
+<a id="more"></a>
+
+<h6 id="队首阻塞"><a href="#队首阻塞" class="headerlink" title="队首阻塞"></a>队首阻塞</h6><p>困扰HTTP/1客户端/服务器端交互的最大问题是一种被称为队首阻塞的现象。这体现在HTTP/1协议无法同时处理超过一小批的请求（通常一次处理6个请求，但因浏览器而导）。请求按接收顺序响应，在初始批处理中的所有请求完成之前，无法开始下载内容的新请求。</p>
+<p>解决这个问题的一种方法是捆绑文件，减少请求可以最大限度地减轻队首阻塞问题，但是当捆绑文件一部分发生改变时，必须再次下载整个捆绑资源而不是只下载已绑定的部分。</p>
+<p>通过域名分片的技术可以绕过请求限制，通过跨域分布请求绕过最大的并发请求限制，有了两个域提供服务就可以同时满足两倍的请求，缺点是需要大量的时间和经费投入。</p>
+<h6 id="未压缩头部"><a href="#未压缩头部" class="headerlink" title="未压缩头部"></a>未压缩头部</h6><p>Web服务器的头部信息描述了资源的请求和响应的许多方面，其中大部分的表达方式存在冗余。</p>
+<p>cookie通常用于跟踪用户会话，因此包含会话ID。</p>
+<p>假如有一个包含60个资源的网页，每个资源都携带一个会话ID为128字节的cookie，每个请求都必须向服务器上传另外128字节的数据，以表示cookie对其有效的域。当分布在几个请求中时，这不算多，但是想象一个有60个请求都附加了这个cookie的页面。客户机必须在所有这些请求中，总共向服务器发送7.5KB的额外数据，这种情况不仅会在请求头中发生，还会发生在响应头中，因此Web服务器的请求和响应中都有这些头部堆积的数据。</p>
+<p>服务器压缩并不可以解决这个问题，他能压缩响应体，不能压缩响应头。</p>
+<h6 id="不安全网站"><a href="#不安全网站" class="headerlink" title="不安全网站"></a>不安全网站</h6><p>HTTP/1不要求实现SSL，所以用户隐私得不到保障。</p>
+<h5 id="通过HTTP-2逐一解决这些问题"><a href="#通过HTTP-2逐一解决这些问题" class="headerlink" title="通过HTTP/2逐一解决这些问题"></a>通过HTTP/2逐一解决这些问题</h5><h6 id="解决队头堵塞"><a href="#解决队头堵塞" class="headerlink" title="解决队头堵塞"></a>解决队头堵塞</h6><p>HTTP/2的不同之处在于，它可以通过实现新的通信体系结构来并行满足更多请求，与使用多个连接传输资源的HTTP/1不同，HTTP/2能够使用一个连接并行处理多个请求。</p>
+<ol>
+<li>流（stream）：服务器和浏览器之间的双向同心同道，单个流对服务器的请求和来自服务器的响应组成，流是封装的，可以通过多个流在同一连接中并行下载多个资源。</li>
+<li>消息：由流封装，单个消息大致相当于服务器的一个HTTP/1请求或者来自服务器的一个响应，提供了请求资源和从Web服务器接受资源内容所需要的机制。</li>
+<li>帧（frame）：由消息封装，是消息中的分隔符，表明后面的数据类型，比如HEADERS帧表明以下数据表示响应的HTTP头，DATA帧表示以下数据是所请求资源的内容。</li>
+</ol>
+<p>这种设计降低了对HTTP/2服务器发起请求的成本，某些情况下，成本已经低到不值得再捆绑资源了，在某些情况下，捆绑甚至会导致加载速度变慢，重要的是，你可能不再需要使用雪碧图和捆绑资源这样的反模式。</p>
+<h6 id="解决头部压缩问题"><a href="#解决头部压缩问题" class="headerlink" title="解决头部压缩问题"></a>解决头部压缩问题</h6><p>即使开启了服务器压缩，HTTP/1中的头部也是未压缩的。服务器压缩只转换资源，而不转换头部。虽然头部占页面总负载的比例不大，但它们累积起来也相当可观。</p>
+<p>HTTP/2引入了一个名为HPACK的压缩算法来解决这个问题。HPACK不仅压缩头部数据，还通过创建一个表来存储重复的头部，以删除多余头部。</p>
+<p>HPACK通过利用索引来跟踪跨请求的重复的头部数据的表，以消除重复的头部。它的结构类似于一个带有索引的典型数据库表。发现新的头部值时，会将其压缩并存储在表中，并赋予一个唯一的标识符。</p>
+<p>发出请求时，这个过程在客户端完成，表格被传输到服务器端，并由服务器端解包以生成响应。然后，服务器端对响应头重复此过程，客户端对服务器端生成的响应表进行解包，并将这些头部应用于每个下载资源的响应。其结果是，去重的头部和压缩数据以与HTTP/1头部相同的方式渲染，过程是透明的。网站加载速度也因此而变快。</p>
+<h6 id="确保HTTPS"><a href="#确保HTTPS" class="headerlink" title="确保HTTPS"></a>确保HTTPS</h6><p>虽然和性能关联不大，但支持HTTP/2的浏览器实际上要求通过HTTP/2进行的任何通信都必须是安全的 ，这个要求存在争议，但还是有好处的。随着越来越多的服务器采用HTTP/2并实现SSL，整个互联网将变得越来越安全。</p>
+<h5 id="Node实现HTTP-2服务器（简易）"><a href="#Node实现HTTP-2服务器（简易）" class="headerlink" title="Node实现HTTP/2服务器（简易）"></a>Node实现HTTP/2服务器（简易）</h5><p>可以使用npm中的spdy包，在Node中编写一个简单的HTTP/2服务器，虽然SPDY是这个包支持的协议之一，但它也支持HTTP/2，这才是你需要的。</p>
+<p>首先你需要一个证书：可以从网上下载免费的证书，剩下的步骤可以参考：<a href="https://www.npmjs.com/package/spdy" target="_blank" rel="noopener">spdy</a>。</p>
+<h5 id="HTTP-2对应优化技术的变化"><a href="#HTTP-2对应优化技术的变化" class="headerlink" title="HTTP/2对应优化技术的变化"></a>HTTP/2对应优化技术的变化</h5><p>❏ 在HTTP/2上仍然要使用减小资源大小的技术。这些技术包括缩小、服务器压缩和图像优化。无论何时，减小资源的大小总有助于缩短加载时间。</p>
+<p>❏ 在HTTP/2上，应该停止使用组合文件的技术。虽然在减少HTTP/1客户端/服务器端交互的延迟方面很有用，但是在HTTP/2中请求成本要低得多，并且合并文件可能会对缓存效率产生不利影响。</p>
+<h6 id="资源粒度和缓存效率"><a href="#资源粒度和缓存效率" class="headerlink" title="资源粒度和缓存效率"></a>资源粒度和缓存效率</h6><p>连接（文件组合）技术是为了减少发送的HTTP请求的数量而组合文件的过程，这对HTTP/1好，但是会损害HTTP/2的性能。</p>
+<p>原因是缓存：无论是否连接文件，正确的缓存策略都将起作用，连接文件会降低资源更改时缓存的效率，但是使用HTTP/1时，放弃一定效率减少首屏加载是很划算的。</p>
+<h5 id="识别HTTP-2的性能反模式"><a href="#识别HTTP-2的性能反模式" class="headerlink" title="识别HTTP/2的性能反模式"></a>识别HTTP/2的性能反模式</h5><h6 id="1．构建CSS和JavaScript"><a href="#1．构建CSS和JavaScript" class="headerlink" title="1．构建CSS和JavaScript"></a>1．构建CSS和JavaScript</h6><p>连接的一个常见用法是捆绑CSS和JavaScript文件。在HTTP/1上连接，这有两个作用：</p>
+<ol>
+<li>更少的请求有利于HTTP/1客户端/服务器端交互。</li>
+<li>它可以通过提前加载所有资源加快后续页面的加载速度。</li>
+</ol>
+<p>第二个原因同样适用于HTTP/2驱动的网站，但是因为请求成本更低，所以让CSS和JavaScript的粒度更细会更有意义。对于CSS，这很简单：为每个唯一的页面模板创建不同的CSS文件。这样可以切割CSS，在需要的页面上加载它，并且可以限制所有CSS更新对特定模板的影响，这将最大程度提高缓存策略的有效性。</p>
+<p>至于JavaScript文件的拆分方式，则取决于网站及其所需的功能。你可以根据应用它们的页面模板拆分这些脚本，但这可能并非适用于所有网站，因为页面可能共享公共的功能。</p>
+<h6 id="2．图像雪碧图"><a href="#2．图像雪碧图" class="headerlink" title="2．图像雪碧图"></a>2．图像雪碧图</h6><p>图像雪碧图会产生与任何其他形式的连接相同的后果。</p>
+<p>但是当图像雪碧图可能比其单个图像文件的总和稍小的情况下，在HTTP/1中，请保持图像分离，而不是合并它们。以后需要更新一个图像时，你会意识到从缓存策略中获得的好处，因为你的访问者不会被迫下载整个雪碧图来获得某个被更改的图像。</p>
+<h6 id="3．资源内联"><a href="#3．资源内联" class="headerlink" title="3．资源内联"></a>3．资源内联</h6><p>仍然属于连接的讨论范畴：资源内联发生在获取CSS、JavaScript或二进制资源，并将其嵌入HTML或CSS时。对于文本资源，这意味着你要在<style>标签中复制粘贴一些CSS，或者在<script>标签中使用JavaScript执行相同的操作。你还可以将SVG图像直接内联到HTML。</p>
+<p>内联二进制资源可以使用数据URI方案来实现。此方法将数据编码为base64字符串，并将其与内容类型组合，比如src标签中的base64，</p>
+<p>数据URI方案应用广泛，比如link标签、img标签、CSS的url引用，以及几乎任何允许你引用外部资源的地方。</p>
+<p>虽然使用数据URI方案似乎是一个好主意，在一些场景中可能有些用处，但它们效率低下。编码的字符串通常比它的源字符串大，有时超过33%甚至更多，所有的资源内联方法都无法有效缓存。跨多个文档使用的内联数据是冗余下载的，并且只能在包含它的文档的上下文中缓存。</p>
+<p>你不能在HTTP/2中内联资源，原因和不应使用图像雪碧图或打包CSS/JavaScript的原因一样。解决这个问题的简单方法是：如果你的目标是减少请求，那么只对在HTTP/1上运行的网站这样做。对于HTTP/2，则保持资源的粒度与工作流相匹配。</p>
+<hr>
+
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong s>
+              本博客所有文章除特别声明外，均采用 <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="external nofollow"
+                target="_blank">Apache License 2.0</a> 许可协议。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://negronis.github.io/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96HTTP2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96Web%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E8%AF%84%E4%BC%B0/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            性能优化Web性能分析评估
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%B5%84%E6%BA%90%E6%96%B9%E5%90%91/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">性能优化资源方向</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        Jiayu Fan
+      </li>
+      <li>
+        
+        Powered by
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Negroni&#39;s blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>在？来整活儿...</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['console.log(&#39;Hello World!&#39;);', '', ''],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+    
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    性能优化图像方向 |  Negroni&#39;s blog
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-性能优化图像方向" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  性能优化图像方向
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%9B%BE%E5%83%8F%E6%96%B9%E5%90%91/" class="article-date">
+  <time datetime="2021-04-17T00:42:33.000Z" itemprop="datePublished">2021-04-17</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">5k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">18分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h4 id="图像方向"><a href="#图像方向" class="headerlink" title="图像方向"></a>图像方向</h4><h5 id="理解图像"><a href="#理解图像" class="headerlink" title="理解图像"></a>理解图像</h5><p>在互联网上使用图像曾经很简单：虽然存在一些格式，但都是位图（也称为光栅）图像。</p>
+<h6 id="光栅图像"><a href="#光栅图像" class="headerlink" title="光栅图像"></a>光栅图像</h6><p>Web上最常用的图像类型是光栅，有时也被称为<strong>位图</strong>，典型例子有：PNG，JPEG，GIF，由二维网格上对齐的像素组成。</p>
+<h6 id="光栅图像使用场景"><a href="#光栅图像使用场景" class="headerlink" title="光栅图像使用场景"></a>光栅图像使用场景</h6><p>用于描述Web上的各种内容比如：Logo，图标，照片等，HTML中使用img标签显示，CSS中使用background属性，也可用于较少使用的其他属性比如list-style-image。</p>
+<p>光栅图像分类：有损图像和无损图像</p>
+<a id="more"></a>
+
+<h6 id="有损图像"><a href="#有损图像" class="headerlink" title="有损图像"></a>有损图像</h6><p>有损图像采用丢弃未压缩图像源中数据的压缩算法。</p>
+<p>实现思路：是可接受一定程度的质量损失以换取较小的文件。</p>
+<p>举个例子：数码相机的SD卡中下载的通常是JPEG格式，当相机拍摄时，将照片的未压缩版本存储在内存中，并使用无损压缩将未压缩的源转换为JPEG图像。</p>
+<p>由此可知：摄影内容最适合JPEG格式。</p>
+<p><strong>这种格式的缺点</strong>：极端的压缩会变得非常明显，如果这些文件类型不是从压缩的源直接保存的，则很容易发生代际损失，当已经压缩的文件被重新压缩时，也会发生代际损失导致视觉效果进一步退化。</p>
+<p>JPEG算法的输出质量以1～100的刻度表示，其中1最低，100最高。</p>
+<h6 id="无损图像"><a href="#无损图像" class="headerlink" title="无损图像 *"></a>无损图像 *</h6><p>这类图像使用不从原始图像源中删除数据的压缩算法，这类图像适合对图像质量要求较高的场景，这使得无损格式称为<strong>图标等内容</strong>的最佳选择。</p>
+<p><strong>无损图像的分类</strong>：</p>
+<ol>
+<li>8位(256色)图像：包括GIF和8位PNG格式，仅支持256色和1位透明度，对于不需要大量色彩或者复杂透明度的图标和像素艺术图像来说是最好的选择。</li>
+<li>全彩图像，只有全彩PNG格式和无损版本WebP格式支持256位以上的颜色，它们都支持Alpha透明度，最高支持1670万色。全彩PNG比WebP支持范围更广。<strong>它们适用于图标和图片，无损性代表除非需要全透明，否则照片内容最好保留为JPEG</strong>。</li>
+</ol>
+<h6 id="基本使用规则"><a href="#基本使用规则" class="headerlink" title="基本使用规则 *"></a>基本使用规则 *</h6><p>颜色少的简单图像应该使用8位无损格式；不适合有损格式或需要完全透明的图像应使用全彩PNG格式。</p>
+<h6 id="SVG图像"><a href="#SVG图像" class="headerlink" title="SVG图像 *"></a>SVG图像 *</h6><p>Web上使用的另一种图像格式是<strong>可缩放矢量图形</strong>（Scalable Vector Graphics, SVG）。</p>
+<p><strong>SVG的特点</strong>：SVG是一种矢量图格式。与光栅图像不同，它们由数学计算的形状和大小组成，所以可以缩放到任何大小。</p>
+<p><strong>SVG的渲染过程</strong>：尽管所有设备屏幕都是像素驱动的，因而所有的显示输出最终也以像素表示，但矢量图像显示在屏幕上时依然会经历一个不同于光栅图像的过程：</p>
+<p>被解析并评估数学属性 =》 通过一个被称为<strong>光栅化</strong>的过程映射到基于像素的显示。</p>
+<p>当缩放时这个过程都会发生，保证视觉的完整性。</p>
+<p><strong>SVG的优点</strong>：<strong>矢量图因其渲染方式而缩放得非常好</strong>。</p>
+<p><strong>SVG的特征</strong>：尽管AI等程序的本地文件格式是用二进制表示，但<strong>SVG本身是用XML表示</strong>的，SVG的媒体类型image/svg+sml反映了它是基于XML的，这个特性允许在文本编辑器中编辑SVG文件，甚至可以再SVG中使用CSS和媒体查询。</p>
+<h6 id="SVG的使用场景"><a href="#SVG的使用场景" class="headerlink" title="SVG的使用场景"></a>SVG的使用场景</h6><p>适用于描述Logo、图标或者线条艺术时最有效，这种灵活的图像格式可以良好的适配纯色和几何形状的图像。</p>
+<p>不适用于照片。</p>
+<h6 id="如何选择图像格式"><a href="#如何选择图像格式" class="headerlink" title="如何选择图像格式 **"></a>如何选择图像格式 **</h6><table>
+<thead>
+<tr>
+<th align="left">格式</th>
+<th align="center">颜色</th>
+<th>类型</th>
+<th align="center">压缩</th>
+<th align="left">场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">PNG(全彩)</td>
+<td align="center">全色</td>
+<td>光栅图</td>
+<td align="center">无损</td>
+<td align="left">全色、不可接受质量损失或完全透明。可适应任何内类型，不能像JPEG压缩照片</td>
+</tr>
+<tr>
+<td align="left">PNG(8位)</td>
+<td align="center">256</td>
+<td>光栅图</td>
+<td align="center">无损</td>
+<td align="left">不需全色，可能需要1位透明度，比如图标和像素艺术</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="center">256</td>
+<td>光栅图</td>
+<td align="center">无损</td>
+<td align="left">同8位PNG，压缩性能低但支持动画</td>
+</tr>
+<tr>
+<td align="left">JPEG</td>
+<td align="center">全色</td>
+<td>光栅图</td>
+<td align="center">有损</td>
+<td align="left">全色，可接受质量损失和不透明，比如照片</td>
+</tr>
+<tr>
+<td align="left">SVG</td>
+<td align="center">全色</td>
+<td>矢量图</td>
+<td align="center">未压缩</td>
+<td align="left">需要/不需要带全套颜色的内容，不可接受缩放质量损失，如线条艺术，图标和其他非摄影内容，不需通过大量开发优化所有设备的显示。</td>
+</tr>
+<tr>
+<td align="left">WebP</td>
+<td align="center">全色</td>
+<td>光栅图</td>
+<td align="center">有损</td>
+<td align="left">同JPEG，同时支持完全透明，更好的压缩性能</td>
+</tr>
+<tr>
+<td align="left">WebP</td>
+<td align="center">全色</td>
+<td>光栅图</td>
+<td align="center">无损</td>
+<td align="left">同全彩PNG，更好的压缩性能</td>
+</tr>
+</tbody></table>
+<h6 id="使用雪碧图时的考量"><a href="#使用雪碧图时的考量" class="headerlink" title="使用雪碧图时的考量"></a>使用雪碧图时的考量</h6><p>雪碧图用于组合页面上的全局视觉元素（如图标等）。然而，为特定于内容的图像创建雪碧图不是一项卓有成效的工作。特定于内容的图像通常会降级到与其相关的页面，而全局图像则显示在网站的每个页面上。创建包含特定于内容的图像雪碧图，会迫使用户下载可能不使用它的页面的内容。</p>
+<p>不应该过于严格地判定什么是全局图像。有些图像可能不会在所有页面上使用，但这些类型的图像仍然应该包括在内，因为它们几乎不会显著增加雪碧图的文件大小。预先加载它们可以加快后续页面的加载速度，因为图像在使用时将在浏览器缓存中。</p>
+<h6 id="雪碧图回退"><a href="#雪碧图回退" class="headerlink" title="雪碧图回退"></a>雪碧图回退</h6><p>大多数情况下创建雪碧图时，使用的图像（图标等）都是适合使用SVG的，因为它们往往与这个格式的功能相称。</p>
+<p>尽管大多数浏览器支持SVG，但是仍有可能回退到一个受到广泛支持的格式。</p>
+<p><a href="https://github.com/filamentgroup/grumpicon" target="_blank" rel="noopener"><strong>Grumpicon</strong></a>：基于Web的工具，接受SVG生成带有回退选项的雪碧图。</p>
+<p>通过上传计算机中的SVG文件会自动下载.zip，其中包含png格式图片。</p>
+<p>这里有一种写法：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//Less</span><br><span class="line"><span class="selector-class">.svg-commom</span>()&#123;</span><br><span class="line">    <span class="attribute">background</span>:<span class="built_in">url</span>(<span class="string">'./img/icons.png'</span>) no-repeat;</span><br><span class="line">    <span class="attribute">background</span>:none , <span class="built_in">url</span>(<span class="string">'./img/icons.svg'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里做了两件事：</p>
+<ol>
+<li>第一行的background指定回退到icons.png</li>
+<li>最后一个是SVG的雪碧图</li>
+</ol>
+<p>此回退之所以有效，是因为较旧的浏览器将读取第一个background属性并将其应用于页面。较旧的浏览器试图解释第二个background属性时，将会失败，因为较旧的浏览器无法解析多个背景，这些功能较弱的浏览器将默认为对icons.png的初始引用。功能更强的浏览器可以选择和使用icons.svg，而忽略icons.png文件。</p>
+<hr>
+<h5 id="缩小图像"><a href="#缩小图像" class="headerlink" title="缩小图像 ***"></a>缩小图像 ***</h5><p>1.使用<a href="https://github.com/imagemin/imagemin/" target="_blank" rel="noopener"><strong>imagemin</strong></a>优化光栅图像</p>
+<p><a href="https://github.com/imagemin/imagemin/" target="_blank" rel="noopener"><strong>imagemin</strong></a>是优化该网站图像的首选工具，它是一个用Node编写的通用图像优化模块，能够优化Web上使用的所有类型的图像。</p>
+<p>该库有很多插件，建议使用前可以详细找一下，很多优化库不唯一，可自行寻找更好的库。</p>
+<h6 id="优化JPEG图像"><a href="#优化JPEG图像" class="headerlink" title="优化JPEG图像"></a><strong>优化JPEG图像</strong></h6><p>安装：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i imagemin imagemin-jpeg-recompress</span><br></pre></td></tr></table></figure>
+
+<p>如果安装失败请改为cnpm。</p>
+<p>编写node脚本test.js：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> imagemin = <span class="built_in">require</span>(<span class="string">'imagemin'</span>),</span><br><span class="line">    jpegRecompress = <span class="built_in">require</span>(<span class="string">"imagemin-jpeg-recompress"</span>);</span><br><span class="line">imagemin([<span class="string">'images/*.jpg'</span>], &#123;</span><br><span class="line">    destination:<span class="string">'build/'</span>,</span><br><span class="line">    plugins: [</span><br><span class="line">        jpegRecompress(&#123;</span><br><span class="line">            accurate: <span class="literal">true</span>,</span><br><span class="line">            max: <span class="number">70</span></span><br><span class="line">        &#125;)</span><br><span class="line">    ]</span><br><span class="line">&#125;).then(<span class="function"><span class="params">res</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(res)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>运行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node test.js</span><br></pre></td></tr></table></figure>
+
+<p>实现效果为：图片大小缩小60%左右，质量不会变化太多。</p>
+<h6 id="优化PNG图像"><a href="#优化PNG图像" class="headerlink" title="优化PNG图像"></a><strong>优化PNG图像</strong></h6><p>使用imagemin优化PNG的方式与优化JPEG基本相同，但上手实践优化这些图像类型也是有好处的。</p>
+<p>安装插件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i imagemin-optipng</span><br></pre></td></tr></table></figure>
+
+<p>编写node脚本png.js：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> imagemin = <span class="built_in">require</span>(<span class="string">'imagemin'</span>),</span><br><span class="line">    optipng = <span class="built_in">require</span>(<span class="string">'imagemin-optipng'</span>);</span><br><span class="line">imagemin([<span class="string">'images/*.png'</span>], &#123;</span><br><span class="line">    destination: <span class="string">'pngbuild/'</span>,</span><br><span class="line">    plugins: [optipng()],</span><br><span class="line">&#125;).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(res)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>运行脚本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node png.js</span><br></pre></td></tr></table></figure>
+
+<p>得到效果为：</p>
+<p>优化大小60%左右，但是处理PNG时间会比较长。</p>
+<h6 id="优化SVG图像"><a href="#优化SVG图像" class="headerlink" title="优化SVG图像"></a><strong>优化SVG图像</strong></h6><p>优化SVG图像的机制与光栅图像有点不同。原因是，光栅图像是二进制文件，但SVG文件是文本文件，可以进行如最小化和服务器压缩等优化。</p>
+<p>安装插件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -g svgo</span><br></pre></td></tr></table></figure>
+
+<p>使用插件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svgo -o a-opt.svg -i a.svg</span><br></pre></td></tr></table></figure>
+
+<p>-o后面是输出文件名，-i后面是输入的文件名</p>
+<p>激进优化SVG：</p>
+<p>使用命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svgo -p 1 -o a-opt.svg -i a.svg</span><br></pre></td></tr></table></figure>
+
+<p>这将大量缩小文件大小，注意，请观察优化后的SVG，激进优化可能会导致细节丢失。</p>
+<hr>
+<h5 id="使用WebP编码图像"><a href="#使用WebP编码图像" class="headerlink" title="使用WebP编码图像"></a>使用WebP编码图像</h5><p>从商业互联网早期开始，光栅图像仅有的可用选项就是JPG、GIF和PNG格式。几乎再没有新的格式出现，直到几年前Google引入了WebP。</p>
+<p>同样适用imagemin库，与其他图像格式不同的是，WebP同时支持有损和无损格式编码。</p>
+<h6 id="编码有损WebP"><a href="#编码有损WebP" class="headerlink" title="编码有损WebP"></a><strong>编码有损WebP</strong></h6><p>使用imagmin编码有损WebP图像很容易，它与以前用于优化JPEG的模式相同。</p>
+<p>WebP有一些缺点，较低质量的设置会产生视觉瑕疵，但JPEG也是如此。</p>
+<p>安装插件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i imagemin imagemin-webp</span><br></pre></td></tr></table></figure>
+
+<p>编写node脚本webp.js：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> imagemin = <span class="built_in">require</span>(<span class="string">'imagemin'</span>);</span><br><span class="line"><span class="keyword">const</span> imageminWebp = <span class="built_in">require</span>(<span class="string">'imagemin-webp'</span>)</span><br><span class="line">imagemin([<span class="string">'images/*.png'</span>], &#123;</span><br><span class="line">    destination: <span class="string">'webpimages/'</span>,</span><br><span class="line">    plugins: [</span><br><span class="line">        imageminWebp(</span><br><span class="line">            &#123; <span class="attr">quality</span>: <span class="number">40</span> &#125;	<span class="comment">//质量，最大值为100</span></span><br><span class="line">        )</span><br><span class="line">    ]</span><br><span class="line">&#125;).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(res);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>运行脚本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node webp.js</span><br></pre></td></tr></table></figure>
+
+<p>即可得到webp格式图像文件，注意路径不要写错，否则无提示报错也不会转换成功。</p>
+<p>与优化后的JPEG相比，WebP优化使高DPI和标准DPI屏幕上的页面加载时间分别减少了35%和20%。这无疑意味WebP值得我们为之努力，即使它并没有受到广泛支持。</p>
+<h6 id="编码无损WebP"><a href="#编码无损WebP" class="headerlink" title="编码无损WebP"></a><strong>编码无损WebP</strong></h6><p>WebP还支持与全彩PNG格式类似的无损编码，支持24位全色和全透明</p>
+<p>很简单，更改webp.js：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> imagemin = <span class="built_in">require</span>(<span class="string">'imagemin'</span>);</span><br><span class="line"><span class="keyword">const</span> imageminWebp = <span class="built_in">require</span>(<span class="string">'imagemin-webp'</span>)</span><br><span class="line">imagemin([<span class="string">'images/*.png'</span>], &#123;</span><br><span class="line">    destination: <span class="string">'webpimages/'</span>,</span><br><span class="line">    plugins: [</span><br><span class="line">        imageminWebp(</span><br><span class="line">            &#123; <span class="attr">lossless</span>: <span class="literal">true</span> &#125;</span><br><span class="line">        )</span><br><span class="line">    ]</span><br><span class="line">&#125;).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(res);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>此处所做的更改，就是将imagemin调用的第一个参数中的文件通配符修改为指向img文件夹中的PNG文件，并将webp对象中的选项替换为lossless: true，该选项告诉imagemin对WebP图像进行无损编码。修改后重新运行脚本。</p>
+<h6 id="支持不支持WebP的浏览器"><a href="#支持不支持WebP的浏览器" class="headerlink" title="支持不支持WebP的浏览器"></a>支持不支持WebP的浏览器</h6><p>尽管WebP是一种很好的图像格式，你也可以从现在开始使用它，但它的支持并不像成熟的图像格式那么广泛，这时可以使用picture标签：</p>
+<p>写法如下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">picture</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">source</span> <span class="attr">srcset</span>=<span class="string">"optimg/a-2x.webp 2x, optimg/a.webp 1x"</span>&gt;</span><span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">source</span> <span class="attr">srcset</span>=<span class="string">"img/a-2x.png 2x, optimg/a.png 1x"</span>&gt;</span><span class="tag">&lt;/<span class="name">source</span>&gt;</span> </span><br><span class="line">	<span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"img/logo.png"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">picture</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>置picture元素的样式时，应该将样式指向img标签，因为picture会将所选source元素的图像分配给该标签。</p>
+<p>我们在此做了两件事：在Chrome上为相当一部分用户提供一种有优势的图像格式，还为那些使用其他浏览器的用户提供图像内容。</p>
+<hr>
+<h5 id="懒加载"><a href="#懒加载" class="headerlink" title="懒加载"></a>懒加载</h5><p>当你懒加载图像时，可以防止在用户甚至还看不到图像的情况下不必要地加载图像。这样可以节省带宽，并减少网站的初始加载时间</p>
+<p>简单说一下步骤：</p>
+<p>1.构建懒加载遍历，封装一个类，存在几个状态例如：</p>
+<ol>
+<li>lazyClass    懒加载类名 “lazy”</li>
+<li>images  图像集合 []</li>
+<li>processing  限制执行 bool</li>
+<li>throttle  函数节流时间 200</li>
+<li>buffer  缓冲区大小 50</li>
+</ol>
+<p>processing属性表示懒加载程序是否正在扫描文档中的图像，稍后将对其进行检查，以防止脚本活动过多。throttle属性是懒加载程序再次扫描图像之前需要等待的时间（毫秒）。buffer属性通过指定超出视口下边缘的像素数，触发特定图像的懒加载行为。</p>
+<p>2.打造构造器和析构器</p>
+<p>思路：</p>
+<p>先构建懒加载的HTML，由picture和img组成，为了实现兼容，将source和img上所有的srcset/src改为data-属性，用来追踪占位同时防止图像加载。</p>
+<ol>
+<li>定义初始化方法，获取lazyClass类名的所有元素，初始化时扫描所有的需要懒加载的图像，绑定scroll和touchmove事件用于触发。</li>
+<li>定义销毁方法destory，用来卸载绑定的scroll个touchmove事件</li>
+<li>定义扫描图像方法，这个方法的思路是：<ol>
+<li>该方法首先检查是否还有需要懒加载的图像。如果没有，则运行destroy方法并结束懒加载程序。如果还有更多图像要处理，则使用for循环运行setTimeout调用，该循环使用<strong>检查图像是否在视口中的方法</strong>遍历所有图像。如果此方法对于图像返回true，则加载图像。通过将processing属性设置为true，可以防止来自scroll事件侦听器的过度调用。</li>
+</ol>
+</li>
+<li>编写核心的懒加载方法：<ol>
+<li>它可以检查用户向下滚动页面的距离。它通过有条件地检查document.body.scrollTop或document.documentElement.scrollTop属性来实现这一点。之所以要检查，原因是IE9对于document.body.scrollTop有兼容性问题（始终返回0），因此可以使用||运算符回退到类似的属性。然后将该值加上窗口的高度，得到用户视口的底部；之后添加一个额外的缓冲区值，以在图像接近（但不完全位于）视口时触发图像加载</li>
+</ol>
+</li>
+<li>编写懒加载程序的核心，加载图片的方法：<ol>
+<li>loadImage方法首先检查它是否是<picture>元素的直接子元素。如果是，则扫描附近的<source>元素，并将其data-src和data-srcset属性转换为src和srcset属性。完成此操作后，将处理<img>元素的data-src和data-srcset属性，并将其转换为src和srcset属性。然后浏览器就会向Web服务器发送这些资源的请求。此函数的编写方式使得懒加载程序可以处理<picture>元素指定的图像，以及标准<img>和可选的srcset支持。更改属性并开始加载图像后，将使用新方法删除lazy类</li>
+</ol>
+</li>
+<li>编写移除类方法<ol>
+<li>这个方法将图像元素的className字符串转换为数组，并对其进行循环。如果找到lazy类，则将其移除，并将数组转换回字符串，然后重新赋值给图像元素的className属性。</li>
+</ol>
+</li>
+</ol>
+<p>最后将方法挂载到生命周期：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.onreadystatechange = lazyLoader.init;</span><br></pre></td></tr></table></figure>
+
+<p><strong>如果用户关闭了JS</strong></p>
+<p>只需要noscript标签即可修复，在HTML复制一遍，将data-xx改回原来的属性并在外层套上noscript标签即可，这个效果不能提供给客户，因此需要确保在关闭JavaScript时隐藏图像占位符。解决这个问题的办法很简单。首先，在<html>元素中添加一个no-js的类，使用这个类定位到CSS标记中懒加载的目标图像，然后这么写：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.no-js</span> <span class="selector-class">.lazy</span>&#123;</span><br><span class="line">    <span class="attribute">display</span>:none;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过在<html>标签中添加一个no-js类，并在DOM中添加一个隐藏．lazy元素的样式，即可确保在关闭JavaScript时，不会同时看到图像占位符和图像。</p>
+<p>但这意味着占位符对于那些启用了JavaScript的浏览器是隐藏的！为了解决这个问题，需要添加一点内联脚本。当JavaScript可用时，它会从<html>标签中删除no-js类。在文本编辑器中打开index.html，并在</head>结束标签之前添加一行脚本：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.querySelector(<span class="string">"html"</span>).className = <span class="string">""</span>;</span><br></pre></td></tr></table></figure>
+
+<p>最终的结果是，使用JavaScript的浏览器将受益于懒加载，而那些禁用JavaScript的浏览器仍将显示图像。这些用户不会从懒加载脚本中受益，但他们将获得可接受的体验.</p>
+<h5 id="响应式图像"><a href="#响应式图像" class="headerlink" title="响应式图像 *"></a>响应式图像 *</h5><p>如果你关注网站的性能，就需要重视响应式图像。CSS的响应式是很重要的，这关系到你的网站是否可以在尽可能多的设备上提供良好的浏览体验。</p>
+<p>更合理的做法是提供最符合设备需要的图像。这就需要维护多组图像，但这项工作是值得的，因为处理和下载图像的时间是最少的。</p>
+<p>通过Google Performance测试，1440*900的图像被缩放至375像素的设备中，和直接呈现在无需缩放大小的屏幕上时，明显无需缩放的渲染和绘制速度更快。</p>
+<p><strong>最佳的方式</strong>：</p>
+<p>定义一个图像宽度的数组，覆盖所需的整个范围，并理解数组中的图像之间会存在一些重叠，以满足不同设备和显示密度的需要。</p>
+<h5 id="图像压缩"><a href="#图像压缩" class="headerlink" title="图像压缩"></a>图像压缩</h5><p>PNG图像优化技术：该技术使用重新编码，可丢弃图像中不必要的数据，而不会影响图片的视觉质量。</p>
+<p>最简单的优化方案：</p>
+<p><a href="https://tinypng.com/" target="_blank" rel="noopener">TinyPNG</a>是一个压缩客户图像的网站，可压缩多种格式的图像。</p>
+<p>高DPI屏幕需要更大的图像集来提供最佳视觉体验，而标准DPI可以使用更小的图像集。</p>
+<p>使用TinyPNG压缩的压缩率如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">56.6</span> KB bg.png -&gt; <span class="number">26.0</span> KB download−<span class="number">54</span>%</span><br><span class="line"><span class="number">147.4</span> KB bg@<span class="number">2</span>x.jpg -&gt; <span class="number">29.4</span> KB download−<span class="number">80</span>%</span><br><span class="line"><span class="number">123</span> B brand_bg.png -&gt; <span class="number">123</span> B download−<span class="number">0</span>%</span><br><span class="line"><span class="number">11.9</span> KB brothers.jpg -&gt; <span class="number">9.7</span> KB download−<span class="number">18</span>%</span><br><span class="line"><span class="number">33.8</span> KB brothers@<span class="number">2</span>x.jpg -&gt; <span class="number">29.8</span> KB download−<span class="number">12</span>%</span><br><span class="line"><span class="number">31.6</span> KB logo.png -&gt; <span class="number">12.0</span> KB download−<span class="number">62</span>%</span><br><span class="line"><span class="number">70.5</span> KB logo@<span class="number">2</span>x.png -&gt; <span class="number">25.2</span> KB download−<span class="number">64</span>%</span><br><span class="line"><span class="number">4.9</span> KB states.png -&gt; <span class="number">1.8</span> KB download−<span class="number">63</span>%</span><br><span class="line"><span class="number">9.6</span> KB states@<span class="number">2</span>x.png -&gt; <span class="number">3.5</span> KB download−<span class="number">63</span>%</span><br></pre></td></tr></table></figure>
+
+<p>总大小从357kb下降到了134kb。</p>
+<p>对Web网站的优化效果：</p>
+<p>压缩前：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">7</span> requests</span><br><span class="line"><span class="number">173</span> kB transferred</span><br><span class="line"><span class="number">374</span> kB resources</span><br><span class="line">Finish: <span class="number">8.03</span> s</span><br><span class="line">DOMContentLoaded: <span class="number">5.73</span> s</span><br><span class="line">Load: <span class="number">8.03</span> s</span><br></pre></td></tr></table></figure>
+
+<p>压缩后：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">7</span> requests</span><br><span class="line"><span class="number">123</span> kB transferred</span><br><span class="line"><span class="number">323</span> kB resources</span><br><span class="line">Finish: <span class="number">7.06</span> s</span><br><span class="line">DOMContentLoaded: <span class="number">5.73</span> s</span><br><span class="line">Load: <span class="number">7.06</span> s</span><br></pre></td></tr></table></figure>
+
+<h5 id="进一步处理图像"><a href="#进一步处理图像" class="headerlink" title="进一步处理图像"></a>进一步处理图像</h5><h6 id="使用图像雪碧图"><a href="#使用图像雪碧图" class="headerlink" title="使用图像雪碧图"></a>使用图像雪碧图</h6><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">											注意</span><br><span class="line">图像雪碧图会组合图像以减少HTTP请求，这是一种连接。尽管你应该在HTTP/1上使用图像雪碧图来提高页面加载速度，但是应当避免在HTTP/2上使用它们</span><br></pre></td></tr></table></figure>
+
+<p>什么是雪碧图？</p>
+<p>把整个网站中单独的图像文件集合起来组成一个图像文件。通常这些图像都是图标等全局元素。</p>
+<p>雪碧图怎么使用：</p>
+<p>雪碧图被创建后，被background-image属性应用，并由background-position属性控制，这个属性似的雪碧图在元素中只显示该图像的相关部分。</p>
+<p>雪碧图的好处：</p>
+<p>可以将大量图像缩减为单个图像，可以高效传递资源并通过减少到Web服务器的连接数来缩短页面加载时间。</p>
+<h6 id="生成雪碧图"><a href="#生成雪碧图" class="headerlink" title="生成雪碧图"></a>生成雪碧图</h6><p>将SVG组合成雪碧图</p>
+<p>使用工具： svg-sprite</p>
+<p>安装：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -g svg-sprite</span><br></pre></td></tr></table></figure>
+
+<p>假设有一个文件夹image-svg有6个SVG，可以组合成一个雪碧图：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svg-sprite --css --css-render-less --css-dest=less --css-prite=../img/icon.svg --css-layout=diagonal image-svg<span class="comment">/*.svg</span></span><br></pre></td></tr></table></figure>
+
+<p>逐步解析命令：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svg-sprite 一CSS模式运行，生成CSS格式 --使用雪碧图mixin生成的less文件 --指定LESS文件的输出目录 --指定图像雪碧图的输出文件夹和文件名 --雪碧图在图上的布局方向 生成雪碧图SVG的位置</span><br></pre></td></tr></table></figure>
+
+<p>使用生成的雪碧图 sprite.less</p>
+<p>引入less：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@import</span> <span class="string">"sprite.less"</span></span><br></pre></td></tr></table></figure>
+
+<p>然后将原来使用SVG的地方改为：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">background-image:url("./image-svg/1.svg");</span><br><span class="line">//改为</span><br><span class="line"><span class="selector-class">.svg-icon_xxx</span> <span class="selector-tag">mixin</span> <span class="selector-pseudo">:.svg-icon_xxx</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3>
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong s>
+              本博客所有文章除特别声明外，均采用 <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="external nofollow"
+                target="_blank">Apache License 2.0</a> 许可协议。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://negronis.github.io/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%9B%BE%E5%83%8F%E6%96%B9%E5%90%91/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%AD%97%E4%BD%93%E6%96%B9%E5%90%91/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            性能优化字体方向
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96CSS%E6%96%B9%E5%90%91/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">性能优化CSS方向</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        Jiayu Fan
+      </li>
+      <li>
+        
+        Powered by
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Negroni&#39;s blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>在？来整活儿...</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['console.log(&#39;Hello World!&#39;);', '', ''],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+    
+  </div>
+</body>
+
+</html>

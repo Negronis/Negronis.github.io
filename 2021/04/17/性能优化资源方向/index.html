@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    性能优化资源方向 |  Negroni&#39;s blog
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-性能优化资源方向" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  性能优化资源方向
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%B5%84%E6%BA%90%E6%96%B9%E5%90%91/" class="article-date">
+  <time datetime="2021-04-17T00:47:04.000Z" itemprop="datePublished">2021-04-17</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4.1k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">14分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="资源方向"><a href="#资源方向" class="headerlink" title="资源方向"></a>资源方向</h3><h4 id="资源缓存"><a href="#资源缓存" class="headerlink" title="资源缓存"></a>资源缓存</h4><p>理解缓存：在浏览器下载资源时，会遵循服务器指定的策略，已确定在以后的访问中是否应该再次下载资源，如果服务器没有定义策略，浏览器默认设置就会启动-通常只缓存当次回话的文件。</p>
+<p>缓存带来了强大的性能改进，并且对页面加载时间有着巨大的影响</p>
+<p>两种缓存状态：</p>
+<p>未命中和以命中，缓存命中时，用户正首次访问该页面，浏览器缓存为空且必须从服务器下载所有内容才能渲染页面时就会发生这种情况，当用户再次访问页面时，命中状态就会存在，此状态下资源位于浏览器缓存中，因此不会进行下载。</p>
+<a id="more"></a>
+
+<h4 id="造成缓存行为的原因"><a href="#造成缓存行为的原因" class="headerlink" title="造成缓存行为的原因"></a>造成缓存行为的原因</h4><p>答案是Cache-Control头部，这个头部几乎在每一个浏览器中都指示缓存行为，其语法很容易理解。</p>
+<h5 id="max-age命令"><a href="#max-age命令" class="headerlink" title="max-age命令"></a>max-age命令</h5><p>使用Cache-Control的最简单方法是通过其max-age指令，该指令指定缓存资源的生命周期（以秒为单位），用户第一次访问页面时，behaviors.js会被下载，因为用户缓存中没有这个文件。当用户再次访问时，请求的资源对于max-age指令中指定的时间量（3600秒，或者更直观地说，一小时）之内的缓存是有效的。</p>
+<p>当你导航到一个页面而不是重新加载它时（例如单击重新加载图标时）, Cache-Control头部的max-age指令的值将影响浏览器是否从本地缓存中获取某些内容。如果该项存在于本地缓存中，则不会向服务器请求该项。</p>
+<p>如果重新加载，或者max-age指令中指定的时间已过，浏览器将与服务器联系以重新验证缓存的资源。浏览器执行此操作时，将检查资源是否已更改。如果已更改，则下载资源的新副本，否则，服务器以304 Not Modified状态响应，而不发送资源。</p>
+<p>服务器检查资源是否已更改的方式可能会有所不同。流行的方法是使用实体标记，简称ETag。ETag是根据文件内容生成的校验和。浏览器将这个值发送到服务器，服务器将通过验证该值来查看资源是否已更改。另一个方法是检查文件在服务器上最后修改的时间，并根据上次修改时间提供资源的副本。可以使用Cache-Control头部修改此行为。</p>
+<h5 id="使用no-cache、no-store、stale-while-revalidate控制资源重新验证"><a href="#使用no-cache、no-store、stale-while-revalidate控制资源重新验证" class="headerlink" title="使用no-cache、no-store、stale-while-revalidate控制资源重新验证"></a>使用no-cache、no-store、stale-while-revalidate控制资源重新验证</h5><p>max-age指令对于大多数网站来说都是适合的，但有时候你需要限制缓存行为或者完全取消它。</p>
+<p>❏ no-cache——向浏览器表明，下载的任何资源都可以存储在本地，但浏览器必须始终通过服务器重新验证资源。</p>
+<p>❏ no-store——这个指令比no-cache更进一步，它表示浏览器不应存储受影响的资源。这要求浏览器在每次访问页面时下载所有受影响的资源。</p>
+<p>❏ stale-while-revalidate——与max-age类似，stale-while-revalidate接受以秒为单位的时间。不同之处在于，当资源的max-age已超过并过时的时候，此头部定义了浏览器可在缓存中使用过时资源的宽限期。然后，浏览器应在后台获取过时资源的新副本，并将其放入缓存以供下次访问。虽然这种行为不受保证，但它可以在有限的场景中提高缓存性能。</p>
+<h5 id="Cache-Control和CDN"><a href="#Cache-Control和CDN" class="headerlink" title="Cache-Control和CDN"></a>Cache-Control和CDN</h5><p>可以在网站前使用CDN。CDN是一种代理服务，它位于你的网站前面，并优化内容向用户的传输。</p>
+<p>CDN有能力在全球范围内分发你的内容。你可以从（比自己的主机）更靠近用户的计算机提供网站资源和内容。较短的距离可以降低这些资源的延迟，从而提高性能。</p>
+<p>为了实现这一点，CDN将你的资源托管在它们的服务器网络上，因此CDN可以有效缓存你的内容。可以将两个Cache-Control指令（public和private）与max-age结合使用，它们能够帮助你控制CDN缓存内容的方式。</p>
+<p>通常不需要显式指定public，因为它是隐含的。private指令的语法与public相同，但它指示所有中介都不缓存资源。使用这个头部处理资源时，就像CDN根本不起作用一样。用户的浏览器仍然根据头部的max-age值缓存资源，但仅针对CDN后面的Web源服务器，而不是CDN本身。</p>
+<h6 id="使用CDN托管资源"><a href="#使用CDN托管资源" class="headerlink" title="使用CDN托管资源"></a>使用CDN托管资源</h6><p>CDN可以在全球分发诸如JavaScript和CSS文件之类的资源，并基于地理位置将它们提供给临近的用户，以此提升性能。这些资源托管在源服务器上，然后分发到最接近潜在最终用户的服务器。这些服务器称为边缘服务器。</p>
+<p>CDN带来的好处不仅限于速度。CDN还为你管理资源的缓存，让你无须担心这方面。CDN将在需要时使资源失效，从而省去了更新代码的麻烦。此外，如果像jQuery这样的CDN资源被广泛使用，并且用户在访问你的网站之前访问过使用相同资源的网站，那么它很可能已经在该用户的缓存中了。这意味着页面的总加载时间较短。免费提升了性能！</p>
+<p>以下是为你提供各种资源的简短的CDN列表：</p>
+<p>❏ cdnjs是一个托管了几乎所有流行的（或不那么流行的）库的CDN。它提供了干净的界面，使你能够搜索任何可以想到的常用CSS或JavaScript资源，例如广泛使用的MVC/MVVM框架、jQuery插件，或项目所依赖的任何其他东西。</p>
+<p>❏ jsDelivr是另一个类似于cdnjs的CDN。如果cdnjs没有提供你想要的内容，请尝试在这里搜索。❏ Google CDN涵盖的库比cdnjs或jsDeliv少得多，但它确实提供了流行的库（如Angular和其他库）。在我的测试中，这是最快的CDN。</p>
+<p>❏ ASP.NET CDN是微软的CDN。它比cdnjs或jsDelivr涵盖的库少，但比Google CDN略胜一筹。在我的测试中，这是最慢的选择，但是仍然比我的共享主机快很多，这使得它成为一个可行的选择。</p>
+<p>如果你使用的库（如Modernizr或Bootstrap）可以配置为提供该库功能的特定部分，请配置你自己的构建，而不要指向CDN上的整个库。有时候，配置一个较小的构建并将其托管在自己的服务器上，比从CDN引用完整的构建要快。理清你的需求，并比较哪种方法更好。</p>
+<h6 id="CDN发生故障怎么办"><a href="#CDN发生故障怎么办" class="headerlink" title="CDN发生故障怎么办"></a>CDN发生故障怎么办</h6><p>与任何服务一样，CDN实际上无法保证100%的正常运行时间。它们在大多数情况下是可用的，但服务中断可能而且确实会发生，比服务中断更可能发生的是网络被配置为阻塞特定主机。这些网络可以是安全意识强的公司、公共设施、军事组织，甚至是封锁整个域名（作为互联网审查工作的一部分）的政府。需要为应对这些情况做好规划。</p>
+<p>回退函数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fallback</span>(<span class="params">missingObj,fallbackUrl</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span>(missingObj) === <span class="string">"undefined"</span>)&#123;</span><br><span class="line">        <span class="keyword">let</span> fallbackScript = <span class="built_in">document</span>.createElement(<span class="string">"script"</span>);</span><br><span class="line">        fallbackScript.src = fallbackUrl;</span><br><span class="line">        <span class="built_in">document</span>.body.appendChild(fallbackScript);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">fallback(<span class="built_in">window</span>.jQuery,<span class="string">"js/jquery.min.js"</span>);</span><br></pre></td></tr></table></figure>
+
+<h6 id="使用子资源完整性验证CDN资源"><a href="#使用子资源完整性验证CDN资源" class="headerlink" title="使用子资源完整性验证CDN资源"></a>使用子资源完整性验证CDN资源</h6><p>现在，在某些浏览器中，可以在HTML中执行相同的完整性检查，以确保script或link元素包含的CDN资源是发布者希望你使用的。这个过程称为子资源完整性。</p>
+<p>子资源完整性的语法使用script或link标签上的两个属性来引用另一个域上的资源。integrity属性指定了用于生成预期校验和的散列算法（例如MD5或SHA-256），以及校验和值本身。</p>
+<p>第二个属性是crossorigin, CDN资源的值始终为anonymous，以指示资源不需要任何用户凭据就可以访问。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://code.jquery.com/jquery-2.2.3.min.js"</span> <span class="attr">integrity</span>=<span class="string">"sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEjo="</span></span></span><br><span class="line"><span class="tag">        <span class="attr">crossorgin</span>=<span class="string">"anonymous"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在兼容的浏览器中，当CDN资源的校验和与浏览器的期望匹配时，一切都将正常工作。如果校验和匹配失败，你将在控制台中看到一个错误消息，它警告你受影响的资源未通过完整性检查。在这种情况下，资源将不会被加载。但是，如果指定了上一节中显示的回退机制，则会加载本地副本。</p>
+<p>一些CDN提供的代码片段已经为你设置了子资源完整性，但这还不是标准做法。你可能需要生成自己的校验和，最简单的方法是使用校验和生成器，但是如果你更倾向于自己生成校验和，则可以依赖openssl命令行实用程序。</p>
+<p>如果运行的是Windows系统，则可以下载OpenSSL二进制文件或使用certutil命令。在这两种情况下，你最好使用在线工具，因为它们更方便，并能生成相同的输出。如果决定生成自己的校验和，请使用可靠的散列算法，如SHA-256或SHA-384。MD5或SHA-1这样的算法对于今天的需求来说不够安全。</p>
+<h5 id="制定最佳缓存策略"><a href="#制定最佳缓存策略" class="headerlink" title="制定最佳缓存策略"></a>制定最佳缓存策略</h5><h6 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h6><p>HTML文件或者输出HTML的服务器端语言（例如PHP或ASP.NET）可以受益于保守的缓存策略。你永远不会希望浏览器假定页面应该只从浏览器缓存中读取，而不去重新验证其新鲜度。</p>
+<p>■ no-cache可以确保总是重新验证资源，如果资源已更改，则下载新的副本。如果文件的内容没有更改，则重新验证资源确实会减少服务器上的负载，但是no-cache不会激进地缓存HTML，以避免内容过时。</p>
+<p>■ max-age为一小时，可确保在max-age到期后，无论发生什么情况，都获取资源的新副本。</p>
+<p>■ 使用private指令告诉位于Web源服务器前面的任何CDN：该资源根本不应缓存在其服务器上，而应仅在用户和Web源服务器之间缓存。</p>
+<h6 id="CSS和JavaScript"><a href="#CSS和JavaScript" class="headerlink" title="CSS和JavaScript"></a>CSS和JavaScript</h6><p>CSS和JavaScript是重要的资源，但不需要如此积极地缓存。因此，你可以使用30天的max-age。</p>
+<h6 id="图像和其他媒体文件"><a href="#图像和其他媒体文件" class="headerlink" title="图像和其他媒体文件"></a>图像和其他媒体文件</h6><p>图像和其他媒体文件（如字体）几乎不会改变，而且这些往往是你要提供的最大的资源。因此，把max-age设置为较长的时间（比如一年）比较合适。</p>
+<h5 id="使缓存资源失效"><a href="#使缓存资源失效" class="headerlink" title="使缓存资源失效"></a>使缓存资源失效</h5><p>尽管“重新加载页面”或“清空缓存”等建议可能会安抚紧张的营销人员和商业客户，但这并不是用户通常与网页交互的方式。</p>
+<p>使用当前的缓存策略时，浏览器总是通过服务器验证HTML文档的新鲜度。你可以在HTML中做一个小的更改，这不仅会触发它自身的再次下载，还会触发再次下载修改后的资源。为此，只需要向CSS或JavaScript的引用添加一个查询字符串。</p>
+<p>如果需要强制CSS更新，则可以将CSS的link标签引用更新为如下内容（更改用粗体标识）：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"css/styles.min.css? v=2"</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>向资源添加查询字符串将导致浏览器再次下载资源，因为资源的URL已经发生了变化。HTML中的这段更改上传到服务器后，缓存中有旧版本styles.min.css的网站访问者，现在将收到新版本的styles.min.css。这个方法可以使任何资源失效，包括JavaScript和图像，当你需要确保某些东西不会被缓存，但又不想自己负责文件的版本控制时，这是权宜之计。解决这个问题的更简便方法是，使用服务器端语言（如PHP）在更新文件时自动处理这个问题。</p>
+<p><strong>使图像和其他媒体文件失效</strong>：</p>
+<p>有时问题不在于CSS或JavaScript，而在于图像等媒体文件。可以使用前面解释的查询字符串方法，但更明智的选择可能是指向一个新的图像文件。</p>
+<h5 id="preload和preconnect"><a href="#preload和preconnect" class="headerlink" title="preload和preconnect"></a>preload和preconnect</h5><h6 id="preconnect"><a href="#preconnect" class="headerlink" title="preconnect"></a>preconnect</h6><p>限制延迟影响的一种方法是利用preconnect资源提示，该提示可以连接到托管浏览器尚未开始下载的资源的域。</p>
+<p>当这个提示用于指向访问当前页面的主机时，并不能提供好处。这样做不能提高性能，因为加载文档并发现preconnect资源提示时，对所请求文档的DNS查询已经发生。</p>
+<p>当你引用不同域（如CDN）上的资源时，preconnect最有效。因为HTML文档是由浏览器自上而下读取的，所以浏览器发现对资源的引用时，会建立到资源域的连接。</p>
+<p>写法：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"preconnect"</span> <span class="attr">href</span>=<span class="string">"https://xxx.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">link</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>尽管Firefox和Chromium浏览器（Chrome、Opera和Android浏览器）都支持preconnect，但preconnect并未得到全面的支持，因此并非所有用户都能感受到它带来的好处。</p>
+<h6 id="dns-prefetch"><a href="#dns-prefetch" class="headerlink" title="dns-prefetch"></a>dns-prefetch</h6><p>dns-prefetch是一种效果略差但支持范围更广的资源提示。它的用法类似，唯一区别是在rel属性或Link头部中不使用preconnect关键字，而是使用dns-prefetch。这个资源提示不会执行到指定域的完全连接，而是执行DNS查询以解析域名的IP地址。我在自己的测试中使用这个头部时，没有得到任何好处，但是在延迟比较严重的情况下，它可以提供一些好处。</p>
+<h6 id="使用prefetch"><a href="#使用prefetch" class="headerlink" title="使用prefetch"></a>使用prefetch</h6><p>在功能强大的浏览器中，prefetch告诉浏览器下载特定资源，并将其存储到浏览器缓存中。这个资源提示可以像请求那样，用于预取位于同一页面上的资源；或者你也可以对用户下一步可能访问的页进行猜测，并请求那个页面的资源，这个方法要小心，他可能会迫使用户下载不必要的资源。</p>
+<p>prefetch的语法与preconnect相同；唯一的区别是<link>标签的rel属性中的值：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">ref</span>=<span class="string">"prefetch"</span> <span class="attr">href</span>=<span class="string">"https://code.jquery.js"</span> <span class="attr">as</span>=<span class="string">"script"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过在HTML的head中添加prefetch提示，浏览器可以在下载文件时获得一个良好的开始。到找到对jQuery的引用时，prefetch提示已经将其捕获并存储在浏览器缓存中，从而缩短了网站的加载时间。</p>
+<p>prefetch是有限制的，浏览器不能保证它会按照指定的方式预取资源。每个浏览器都有自己的prefetch规则，因此请注意，浏览器可能并不总是遵守资源提示。</p>
+<h6 id="使用preload"><a href="#使用preload" class="headerlink" title="使用preload"></a>使用preload</h6><p>preload资源提示与prefetch非常相似，只是它保证将下载指定的资源。其行为类似于prefetch，但没有歧义。不过与prefetch不同，浏览器对preload的支持较少。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">ref</span>=<span class="string">"preload"</span> <span class="attr">href</span>=<span class="string">"https://code.jquery.js"</span> <span class="attr">as</span>=<span class="string">"script"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>preload的主要区别在于，你可以使用as属性描述请求的内容类型。script、style、font和image的值可以分别用于JavaScript、CSS、字体和图像。此属性是完全可选的，但省略它是不利的，因为如果没有as，浏览器将下载该资源两次。</p>
+<p>名为服务器推送的HTTP/2特性在一些HTTP/2实现中使用了相同的HTTP头语法，实现在HTML文档响应时抢先向用户“推送”一个资源。</p>
+<p>preload的性能优势与prefetch基本相同，只是你必须依靠兼容的浏览器满足preload请求。</p>
+
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong s>
+              本博客所有文章除特别声明外，均采用 <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="external nofollow"
+                target="_blank">Apache License 2.0</a> 许可协议。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://negronis.github.io/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%B5%84%E6%BA%90%E6%96%B9%E5%90%91/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96HTTP2/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            性能优化HTTP2
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96JavaScript%E6%96%B9%E5%90%91/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">性能优化JavaScript方向</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        Jiayu Fan
+      </li>
+      <li>
+        
+        Powered by
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Negroni&#39;s blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>在？来整活儿...</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['console.log(&#39;Hello World!&#39;);', '', ''],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+    
+  </div>
+</body>
+
+</html>

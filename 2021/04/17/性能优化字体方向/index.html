@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    性能优化字体方向 |  Negroni&#39;s blog
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-性能优化字体方向" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  性能优化字体方向
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%AD%97%E4%BD%93%E6%96%B9%E5%90%91/" class="article-date">
+  <time datetime="2021-04-17T00:45:17.000Z" itemprop="datePublished">2021-04-17</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.1k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">12分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="字体方向"><a href="#字体方向" class="headerlink" title="字体方向"></a>字体方向</h3><p>字体是许多网站中负载的一个重要部分，而它们的传输方式值得仔细推敲。</p>
+<h4 id="使用字体"><a href="#使用字体" class="headerlink" title="使用字体 *"></a>使用字体 *</h4><h5 id="字体的格式"><a href="#字体的格式" class="headerlink" title="字体的格式"></a>字体的格式</h5><table>
+<thead>
+<tr>
+<th>字体格式</th>
+<th>拓展名</th>
+<th>浏览器支持</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TureType</td>
+<td>ttf</td>
+<td>除IE8及更早外</td>
+</tr>
+<tr>
+<td>Embedded OpenType</td>
+<td>eot</td>
+<td>IE6+</td>
+</tr>
+<tr>
+<td>WOFF</td>
+<td>woff</td>
+<td>除Android浏览器4.3+更早和IE8+更早</td>
+</tr>
+<tr>
+<td>WOFF2</td>
+<td>woff2</td>
+<td>Firefox 39+、Chrome 36+、Opera 23+、Android浏览器4.7+、Chrome/Firefox for Android、Opera Mobile36+</td>
+</tr>
+</tbody></table>
+<a id="more"></a>
+
+<h5 id="构建字体"><a href="#构建字体" class="headerlink" title="构建字体"></a>构建字体</h5><p>找到一款字体，然后将其转换为几种格式。</p>
+<p>转换可以使用nodejs库：</p>
+<ol>
+<li>ttf2eot：TTF=&gt;EOT</li>
+<li>ttf2woff：TTF=&gt;WOFF</li>
+<li>ttf2woff2：TTF=&gt;WOFF2</li>
+<li>otf2ttf：OTF=&gt;TTF(如果你的网站字体只有OpenType（OTF）格式)</li>
+</ol>
+<p>注意：留心许可，查看字体是否可使用。</p>
+<h5 id="构建-font-face级联"><a href="#构建-font-face级联" class="headerlink" title="构建@font-face级联"></a>构建@font-face级联</h5><p>构建@font-face级联的方式非常重要。如果操作正确，它会向浏览器提示哪些格式可用，并提供最佳格式。</p>
+<p>写法例如：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@font-face</span>&#123;</span><br><span class="line">    <span class="attribute">font-family</span>:<span class="string">"Open Sans Regular"</span>;</span><br><span class="line">    <span class="attribute">font-weight</span>:<span class="number">400</span>;</span><br><span class="line">    <span class="attribute">font-style</span>:normal;</span><br><span class="line">    <span class="attribute">src</span>:<span class="built_in">local</span>(<span class="string">"Open Sans Regular"</span>),</span><br><span class="line">        <span class="built_in">local</span>(<span class="string">"OpenSans-Regular"</span>),</span><br><span class="line">        <span class="built_in">url</span>(<span class="string">"open-sans/OpenSans-Regular.woff2"</span>) <span class="built_in">format</span>(<span class="string">"woff"</span>),</span><br><span class="line">        <span class="built_in">url</span>(<span class="string">"open-sans/OpenSans-Regular.eot"</span>) <span class="built_in">format</span>(<span class="string">"embedded-opentype"</span>),</span><br><span class="line">        <span class="built_in">url</span>(<span class="string">"open-sans/OpenSans-Regular.ttf"</span>) <span class="built_in">format</span>(<span class="string">"truetype"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个@font-face级联中详细描述了从最佳情况到最坏情况的各种场景。</p>
+<p>src属性：这个属性接受指定字体的来源列表，以逗号分隔。</p>
+<p>来源会按指定的顺序加载。首先使用local()声明检查用户系统上的字体。这是最理想的结果，因为这种情况下浏览器不必下载任何内容，如果找不到local源，浏览器将从本节前面转换的一组字体格式中下载一个。</p>
+<p>使用这个font-family：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span>&#123;</span><br><span class="line">	<span class="attribute">font-family</span>:<span class="string">"Open Sans Regular"</span>, Helvetica, Arial, sans-serif;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="压缩EOT和TTF"><a href="#压缩EOT和TTF" class="headerlink" title="压缩EOT和TTF"></a>压缩EOT和TTF</h4><p>WOFF2和WOFF格式是内部压缩的。压缩算法是这些格式的固有特性，它们不需要服务器压缩，TTF和EOT字体格式没有压缩，因此是服务器压缩的最佳候选格式，服务器压缩二进制文件类型可能会带来开销，但是为了加快这些优化程度较低的格式的传输，这个过程是值得的。</p>
+<p>默认情况下，将本地Node Web服务器与compression模块一起使用时，会压缩这些格式。但是其他Web服务器可能默认压缩这些格式，也可能不压缩，需要进一步配置。例如，ApacheWeb服务器需要使用mod_deflate压缩这些文件。</p>
+<h4 id="取字体子集"><a href="#取字体子集" class="headerlink" title="取字体子集"></a>取字体子集</h4><p>向任何网站添加字体都会造成一个结果：有更多的数据要通过网络传输。</p>
+<p>可以使用取子集技术减小字体大小，取子集只选择字体文件中所需的字符，丢弃其余字符，这个技术包含按语言取子集，如果一个网站内容是英语，那么仅仅需要拉丁字符就够。</p>
+<h5 id="理解Unicode范围"><a href="#理解Unicode范围" class="headerlink" title="理解Unicode范围 **"></a>理解Unicode范围 **</h5><p>Unicode是规范所有语言字符表示方式的标准，针对各种语言字符目前拥有120000个Unicode保留位。</p>
+<p>它的设计理念不仅是为了容纳字符，更是为了在使用时以一致的方式为他们保留空间。</p>
+<p>Unicode最佳使用实例是UTF-8，是Web上使用的标准，使用Unicode时所有文档中为字符保留的空间都是相同的字体使用Unicode码点为特定字符保留空间。</p>
+<p>可以用Unicode码点生成字体子集，有些字体包含的字符远大于多数用例所需字符，通过生成字体子集指导处适合网站内容的字形，就会得到较小的字体文件。</p>
+<p>生成字体子集的典型方法是使用Unicode范围，范围通过两个Unicode码点表示，这两个码点中包含他们之间的所有码点，一个流行的Unicode范围是基本的拉丁范围，包含大/小写英文字母和数字0-9以及大量特殊符号，此范围对应U+0000 - U+007F。</p>
+<h5 id="手动生成字体子集"><a href="#手动生成字体子集" class="headerlink" title="手动生成字体子集 *"></a>手动生成字体子集 *</h5><p>使用基于Python的fonttools的程序，可在命令行上生成字体的子集。</p>
+<h6 id="安装fontTools"><a href="#安装fontTools" class="headerlink" title="安装fontTools"></a>安装fontTools</h6><p>fonttools的开发者声明了该程序需要Python 2.7或者Python 3.3，或者更高版本。</p>
+<p>使用pip安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install fontTools</span><br></pre></td></tr></table></figure>
+
+<p>安装fonttools之后，可以通过在命令行输入pyftsubset –help检查pyftsubset实用程序是否可用。</p>
+<p><strong>使用pyftsubset生成字体子集</strong>：</p>
+<p>因为网站内容全是英文的，所以需要对基本的拉丁文Unicode范围生成子集。在Unicode官方网站上查找基本拉丁文范围时，你会发现该范围是U+0000到U+007F。这就是你将提供给pyftsubset实用程序以生成子集的信息。</p>
+<p>pyftsubset需要输入TTF、OTF或者WOFF文件，为了简单起见，使用一个简单的TTF文件来做演示：</p>
+<p>CorpoS.ttf    48KB</p>
+<p>先键入以下命令用来设置字体文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyftsubset CorpoS.ttf --unicodes=U+0000-007F --output-file=CorpoS-BasicLatin.ttf --name-IDs='*'</span><br></pre></td></tr></table></figure>
+
+<p>生成了一个CorpoS-BasicLatin.ttf文件，大小为20KB</p>
+<p>继续编写指令，将字体子集转换为EOT、WOFF和WOFF2格式：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ttf2eot CorpoS-BasicLatin.ttf CorpoS-BasicLatin.eot ttf2woff CorpoS-BasicLatin.ttf CorpoS-BasicLatin.woff cat CorpoS-BasicLatin.ttf | ttf2woff2 &gt;&gt; CorpoS-BasicLatin.woff2</span><br></pre></td></tr></table></figure>
+
+<p>然后将这三个字体文件用上面的pyftubset命令进行子集操作，即可得到所有版本的字体子集。</p>
+<p>根据字体的格式不同，可以将字体大小缩小85%～90%。</p>
+<h5 id="使用unicode-range属性传输字体子集"><a href="#使用unicode-range属性传输字体子集" class="headerlink" title="使用unicode-range属性传输字体子集"></a>使用unicode-range属性传输字体子集</h5><p>Unicode-range属性实在@font-face定义中指定的，其值是Unicode代码点的范围和/或集合，格式与输入pyftsubse的格式相同，如果浏览器检测到内容包含此范围字符，它将下载字体否则不会进行下载。</p>
+<p>这个属性没有受到所有浏览器的兼容，没有polyfill。</p>
+<p>unicode-range属性的用法：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*单个值*/</span></span><br><span class="line"><span class="selector-tag">unicode-range</span><span class="selector-pseudo">:U+0026</span>;</span><br><span class="line"><span class="comment">/*范围值*/</span></span><br><span class="line"><span class="selector-tag">unicode-range</span><span class="selector-pseudo">:U+0000-007F</span>;</span><br><span class="line"><span class="comment">/*通配符范围*/</span></span><br><span class="line"><span class="selector-tag">unicode-range</span><span class="selector-pseudo">:U+0027</span>;</span><br><span class="line"><span class="comment">/*多个值*/</span></span><br><span class="line"><span class="selector-tag">unicode-range</span><span class="selector-pseudo">:U+0000-007F</span>, <span class="selector-tag">U</span>+0100, <span class="selector-tag">U</span>+02??;</span><br></pre></td></tr></table></figure>
+
+<p>由于许多原因，基本拉丁语Unicode范围内的字符在许多语言中都很常见，unicode-range属性它只在需要时获取字体子集。</p>
+<h5 id="如果想面对不同国家使用不同子集"><a href="#如果想面对不同国家使用不同子集" class="headerlink" title="如果想面对不同国家使用不同子集"></a>如果想面对不同国家使用不同子集</h5><p>比如西里尔字体</p>
+<p>生成西里尔字体子集：<br>基本拉丁文Unicode范围很简单，而西里尔字符Unicode范围很复杂。它包含了3个不同的逗号分隔范围，并且都需要传递给pyftsubset的–unicodes选项：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyftsubset CorpoS.ttf --unicodes=U+0400-045F, U+0490-0491, U+04B0-04B1 --output-file=CorpoS-BasicLatin-Cyrillic.ttf --name-IDs='*'</span><br></pre></td></tr></table></figure>
+
+<p>按照原来步骤生成其他三种</p>
+<p>然后在@font-face中写声明：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@font-face</span>&#123;</span><br><span class="line">    <span class="attribute">font-family</span>:<span class="string">"CorpoS"</span>;</span><br><span class="line">    <span class="attribute">font-weight</span>:<span class="number">400</span>;</span><br><span class="line">    <span class="attribute">font-style</span>:normal;</span><br><span class="line">    <span class="attribute">src</span>:<span class="built_in">local</span>(<span class="string">"CorpoS"</span>), </span><br><span class="line">        <span class="built_in">url</span>(<span class="string">"CorpoS/CorpoS.woff2"</span>) <span class="built_in">format</span>(<span class="string">"woff"</span>),</span><br><span class="line">        <span class="built_in">url</span>(<span class="string">"CorpoS/CorpoS.eot"</span>) <span class="built_in">format</span>(<span class="string">"embedded-opentype"</span>),</span><br><span class="line">        <span class="built_in">url</span>(<span class="string">"CorpoS/CorpoS.ttf"</span>) <span class="built_in">format</span>(<span class="string">"truetype"</span>),</span><br><span class="line">    	<span class="built_in">url</span>(CorpoS/CorpoS-Cyrillic.ttf<span class="string">""</span>) <span class="built_in">format</span>(<span class="string">"truetype"</span>);</span><br><span class="line">    <span class="attribute">unicode-range</span>:U+<span class="number">0400</span>-<span class="number">045</span>F,U+<span class="number">0490</span>-<span class="number">0491</span>,U+<span class="number">04</span>B0*<span class="number">04</span>B1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>你会注意到，俄文版页面拉取了基本拉丁字符的西里尔字符子集，而英文版页面不需要西里尔字符，依据unicode-range属性忽略了西里尔子集。这种技术对于任何多语言网站（含有使用不同字符范围的语言）都很有用。大多数西方语言，如德语、西班牙语和法语，使用一个更广泛的拉丁文子集就足够了，但希腊语和俄语等语言由于字母表的不同而需要更多子集。亚洲语言尤其受益于这种方法，因为亚洲语言可以有数千个字符。</p>
+<h5 id="旧浏览器的回退方案"><a href="#旧浏览器的回退方案" class="headerlink" title="旧浏览器的回退方案"></a>旧浏览器的回退方案</h5><p>尽管unicode-range是一个很好的特性，但是它并未得到普遍的支持。虽然在较新的WebKit浏览器和Firefox中得到了很好的支持，但在你阅读本文时，其他浏览器可能还不支持它，这些浏览器将忽略unicode-range属性并下载CSS文件中的所有字体子集，而不会进行判断。</p>
+<p>一种可能的方法是，如果字形数量的增加不会对页面性能造成太大的损害，就创建更广泛的子集，这种方法不适用于日文等语言的内容，在日文中，字形的数量可以大幅增加字体文件的大小。</p>
+<p>二：JavaScript</p>
+<p>思路：对于多语言网站，开发人员使用<html>标签的lang属性定义文档的语言。这些语言代码符合ISO 639-1标准。在index-ru.html中，代码类似于<html lang="ru">。可以编写一点内联JavaScript来检查此标签中的语言代码。如果查找到的是需要的语言代码，则加载一个单独的较小样式表，其中包含要延迟加载的子集的@font-face声明。</p>
+<p>然后将俄语的文字放在ru.css中，用link引用它，link包含储存位置的占位符data-ref和存储目标内容语言代码的data-lang属性，直到被js求值，如果确定html的lang === link的data-lang，则下载解析样式表。</p>
+<h4 id="优化字体加载"><a href="#优化字体加载" class="headerlink" title="优化字体加载"></a>优化字体加载</h4><p>使用<link>标签加载CSS会阻塞渲染，直到下载和解析样式表并将样式应用于文档，字体也不例外，加载它们会导致一些问题，这些问题会对网站的可读性产生影响。</p>
+<p><strong>不可见文本的闪烁</strong>：不可见文本的闪烁类似于无样式内容的闪烁（Flash of UnstyledContent, FOUC）异常，只是前者发生在文档的字体完全加载之前，处理的是不可见的文本，而不是无样式的内容，随着连接速度的降低和网络延迟的增加，这个问题会变得更加明显。</p>
+<p>浏览器下载字体时会等待渲染文本，以避免出现无样式文本的闪烁（Flash of Unstyled Text, FOUT），加载字体时，浏览器将只在这段时间隐藏文本，超过这个时间段，无样式的文本将在字体加载完成之前显示。加载字体后，设置无样式文本的样式。</p>
+<h5 id="使用CSS-font-display属性"><a href="#使用CSS-font-display属性" class="headerlink" title="使用CSS font-display属性"></a>使用CSS font-display属性</h5><p>CSS中的font-display属性提供了一种便捷的办法，可以用最少的工作量控制字体的显示</p>
+<p>虽然不受普遍支持，但此属性可以使你在很大程度上控制字体的显示方式。该属性需要放在@font-face声明中，并接受以下值之一：</p>
+<ol>
+<li>auto    - 默认</li>
+<li>block - 阻塞文本渲染直到字体加载完成</li>
+<li>swap - 先显示回退文本，加载结束后再切换</li>
+<li>fallback - auto和swap的折中，短时间内不可见，若加载则自定义，否则回退</li>
+<li>optional - 同fallback</li>
+</ol>
+<p>用法很简单：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@font-face</span>&#123;</span><br><span class="line">    <span class="attribute">font-family</span>:<span class="string">"text"</span>;</span><br><span class="line">    <span class="attribute">font-weight</span>:bold;</span><br><span class="line">    <span class="attribute">src</span>:....;</span><br><span class="line">    <span class="attribute">font-display</span>:swap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="字体加载API"><a href="#字体加载API" class="headerlink" title="字体加载API"></a>字体加载API</h5><p>字体加载API是一个基于JavaScript的工具，用于控制如何加载字体,字体加载API提供了一种类似的能力，可以通过JavaScript而不是CSS控制字体的显示，且不必考虑字体的来源。</p>
+<p>首先使用loaded类控制字体显示：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.fonts-loaded</span> <span class="selector-tag">body</span>&#123;</span><br><span class="line">    <span class="attribute">font-family</span>:<span class="string">"Open Sans Regular"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.font-loaded</span> <span class="selector-class">.navItem</span> <span class="selector-tag">a</span>&#123;</span><br><span class="line">	<span class="attribute">font-family</span>:<span class="string">"Open Sans Light"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.fonts-loaded</span> <span class="selector-class">.articleTitle</span>,</span><br><span class="line"><span class="selector-class">.fonts-loaded</span> <span class="selector-class">.sectionHeader</span>&#123;</span><br><span class="line">    <span class="attribute">font-family</span>:<span class="string">"Open Sans Bold"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写字体加载API：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function">(<span class="params"><span class="built_in">document</span></span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">document</span>.fonts)&#123;</span><br><span class="line">        <span class="built_in">document</span>.fonts.load(<span class="string">"1em Open Sans Light"</span>);</span><br><span class="line">        <span class="built_in">document</span>.fonts.load(<span class="string">"1em Open Sans Regular"</span>);</span><br><span class="line">        <span class="built_in">document</span>.fonts.load(<span class="string">"1em Open Sans Bold"</span>);</span><br><span class="line">        <span class="built_in">document</span>.fonts.ready.then(<span class="function"><span class="params">fontFaceSet</span>=&gt;</span>&#123;</span><br><span class="line">           	<span class="built_in">document</span>.documentElement.className += <span class="string">' fonts-loaded'</span>;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">document</span>.documentElement.className += <span class="string">' fonts-loaded'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)(<span class="built_in">document</span>)</span><br></pre></td></tr></table></figure>
+
+<p>所有字体都已加载后，fonts-loaded类将添加到<html>元素中。这会破坏浏览器的初始FOIT，在加载文档并应用CSS后会立即读取内容。然后，字体在可用时会应用到文档。这确保无论用户端发生什么，文本都将尽快可见，如果字体无法加载，文本就保持当前这种方式。</p>
+<h6 id="避免重复加载"><a href="#避免重复加载" class="headerlink" title="避免重复加载"></a>避免重复加载</h6><p>设置cookie，修改API中的if：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="built_in">document</span>.fonts &amp;&amp; <span class="built_in">document</span>.cookie.indexOf(<span class="string">"fonts-loaded"</span>) !== <span class="number">-1</span>)&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在html某个地方设置cookie：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie = <span class="string">"fonts-loaded="</span>;</span><br></pre></td></tr></table></figure>
+
+<p>JavaScript是检查cookie和应用fonts-loaded类的好方法。如果真的想加快速度，可以使用后端语言（例如PHP）修改文档，以便在服务器发送内容时，字体加载类就位于<html>元素上。删除在JavaScript中添加类的else条件，并通过检查后端的cookie来修改输出。</p>
+<h6 id="兼容禁用JS"><a href="#兼容禁用JS" class="headerlink" title="兼容禁用JS"></a>兼容禁用JS</h6><p>将css卸载noscript标签：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">noscript</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line">    	body&#123;</span><br><span class="line"><span class="css">            <span class="selector-tag">font-family</span><span class="selector-pseudo">:"Open</span> <span class="selector-tag">Sans</span> <span class="selector-tag">Regular</span>";</span></span><br><span class="line">        &#125;</span><br><span class="line"><span class="css">        <span class="selector-class">.navItem</span> <span class="selector-tag">a</span>&#123;</span></span><br><span class="line"><span class="css">            <span class="selector-tag">font-family</span><span class="selector-pseudo">:"Open</span> <span class="selector-tag">Sans</span> <span class="selector-tag">Light</span>";</span></span><br><span class="line">        &#125;</span><br><span class="line"><span class="css">        <span class="selector-class">.articleTitle</span>,</span></span><br><span class="line"><span class="css">        <span class="selector-class">.sectionHeader</span>&#123;</span></span><br><span class="line"><span class="css">            <span class="selector-tag">font-family</span><span class="selector-pseudo">:"Open</span> <span class="selector-tag">Sans</span> <span class="selector-tag">Bold</span>";</span></span><br><span class="line">        &#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">noscript</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong s>
+              本博客所有文章除特别声明外，均采用 <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="external nofollow"
+                target="_blank">Apache License 2.0</a> 许可协议。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://negronis.github.io/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%AD%97%E4%BD%93%E6%96%B9%E5%90%91/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96JavaScript%E6%96%B9%E5%90%91/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            性能优化JavaScript方向
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%9B%BE%E5%83%8F%E6%96%B9%E5%90%91/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">性能优化图像方向</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        Jiayu Fan
+      </li>
+      <li>
+        
+        Powered by
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Negroni&#39;s blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>在？来整活儿...</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['console.log(&#39;Hello World!&#39;);', '', ''],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+    
+  </div>
+</body>
+
+</html>

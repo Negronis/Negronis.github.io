@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    性能优化CSS方向 |  Negroni&#39;s blog
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-性能优化CSS方向" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  性能优化CSS方向
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96CSS%E6%96%B9%E5%90%91/" class="article-date">
+  <time datetime="2021-04-17T00:41:27.000Z" itemprop="datePublished">2021-04-17</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.3k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">12分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h4 id="CSS方向"><a href="#CSS方向" class="headerlink" title="CSS方向"></a>CSS方向</h4><h5 id="记住几个要点"><a href="#记住几个要点" class="headerlink" title="记住几个要点"></a>记住几个要点</h5><ol>
+<li>尽可能简洁，多使用复合css</li>
+<li>使用CSS浅选择器</li>
+<li>少使用Less/Sass的嵌套结构</li>
+<li>减少重复定义</li>
+<li>删减库中多余代码</li>
+</ol>
+<a id="more"></a>
+
+<h5 id="使用csscss查找冗余部分"><a href="#使用csscss查找冗余部分" class="headerlink" title="使用csscss查找冗余部分"></a>使用csscss查找冗余部分</h5><p>依赖：Ruby</p>
+<p>安装：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gem install csscss</span><br></pre></td></tr></table></figure>
+
+<p>执行：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">csscss styles.css -v --no-match-shorthand</span><br></pre></td></tr></table></figure>
+
+<p>程序输出将显示跨元素间的所有冗余样式</p>
+<h5 id="开发优先级"><a href="#开发优先级" class="headerlink" title="开发优先级"></a>开发优先级</h5><p>将移动端作为第一优先级是有很明显的优势的，首先移动端设备逐渐成为互联网趋势的主流，其次规模从小到大升级比从大到小降级更容易。</p>
+<p>计算em，em的公式为：<br>$$<br>em = px / 默认文字大小<br>$$<br>举例来说：</p>
+<p>平板的临界点为600px，那么除以文档默认大小16px后的得到的值为37.5em。</p>
+<p><strong>em与rem的区别：</strong></p>
+<p>em是特定于上下文的单位，在媒体查询中，上下文是HTML文档的默认font-size，在层次结构中深入使用时上下文可能会发生变化。</p>
+<p>rem类似于em，只不过上下文总是依据文档根节点的默认字体大小而不是父元素的字体大小，rem尚未通用。</p>
+<p>一般来说编写流媒体的顺序比较流行的是：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">html</span>&#123;</span><br><span class="line">    <span class="attribute">font-size</span>:<span class="number">16px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 手机样式 */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 平板样式 */</span></span><br><span class="line"><span class="keyword">@media</span> screen <span class="keyword">and</span> (min-width <span class="number">37.5em</span>)&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 桌面样式 */</span></span><br><span class="line"><span class="keyword">@media</span> screen <span class="keyword">and</span> (min-width <span class="number">62.5em</span>)&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用meta标签控制浏览器渲染页面的初始比例：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="友好指南"><a href="#友好指南" class="headerlink" title="友好指南"></a>友好指南</h5><ol>
+<li>正确配置viewport属性</li>
+<li>响应性，网站要在更改时响应视窗大小，垂直滚动没问题，水平滚动很糟糕</li>
+</ol>
+<hr>
+<h5 id="对css进行性能调整"><a href="#对css进行性能调整" class="headerlink" title="对css进行性能调整"></a>对css进行性能调整</h5><p><b>避免使用@import声明</b>(普通css)，因为@import指令在下载样式表之前不会处理，这个行为导致网页加载时间延迟。</p>
+<h6 id="常规css中-import串行"><a href="#常规css中-import串行" class="headerlink" title="常规css中@import串行"></a>常规css中@import串行</h6><p><b>面向性能的网站目标之一是尽可能多地并行化http请求</b>，一个一个的串行@import会增加页面加载和渲染时间，如果网站中有一些css来自第三方，打包不可行，此时应该以来link标签。</p>
+<h6 id="并行的link标签"><a href="#并行的link标签" class="headerlink" title="并行的link标签"></a>并行的link标签</h6><p>link标签是加载css最佳原生方法，他是并行的，扫描html文档后将加载文档中找到的所有link标签，<strong>从技术上讲，可以在style标签中使用@import而不会影响性能，但是如果将此方法与link标签混用，或者在css文件中使用@import，将导致串行请求</strong>。</p>
+<h6 id="关于LESS-SASS中的-import"><a href="#关于LESS-SASS中的-import" class="headerlink" title="关于LESS/SASS中的@import"></a>关于LESS/SASS中的@import</h6><p>在它们中，@import有不同的功能，它由编辑器读取并用于打包LESS/SASS文件，这样可以再开发期间模块化样式，并在编译为CSS时进行打包。</p>
+<h6 id="在head中放置css"><a href="#在head中放置css" class="headerlink" title="在head中放置css"></a>在head中放置css</h6><p>应该在文档中放置对css引用，最早可以加载的位置是head标签，可缓解：无样式内容闪烁问题，提高页面渲染性能。</p>
+<h6 id="选择器的性能"><a href="#选择器的性能" class="headerlink" title="选择器的性能*"></a>选择器的性能*</h6><p>大多数选择器类型的总体性能相似，但是专用的选择器类型，如兄弟选择器，伪类选择器和属性选择器性能开销特别大。</p>
+<h6 id="尽量使用flexbox布局"><a href="#尽量使用flexbox布局" class="headerlink" title="尽量使用flexbox布局"></a>尽量使用flexbox布局</h6><hr>
+<h5 id="CSS过渡"><a href="#CSS过渡" class="headerlink" title="CSS过渡"></a>CSS过渡</h5><h6 id="原生CSS特性的优点"><a href="#原生CSS特性的优点" class="headerlink" title="原生CSS特性的优点"></a>原生CSS特性的优点</h6><ol>
+<li>广泛支持</li>
+<li>回流复杂DOM时，CPU使用效率更高</li>
+<li>没有额外的开销</li>
+</ol>
+<h6 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h6><p>尽管CSS过渡有自己的使用场景，且可在无额外开销的情况下为用户提高动画性能，但它们只是在简单场景和UI效果上效果最好，比如悬停而非canvas导航过渡，如果你在构建的网站需要更复杂的动画行为，使用JavaScript解决方案可能会获得更好的性能。</p>
+<h6 id="使用will-change属性优化过渡"><a href="#使用will-change属性优化过渡" class="headerlink" title="使用will-change属性优化过渡"></a>使用will-change属性优化过渡</h6><p>第一执行css过渡时，必须确定该元素的哪些方面将发生改变，所以浏览器必须在第一次执行过渡之前做一些功能，尽管本身不一定是次优的，可能对渲染性能产生负面影响。</p>
+<p>以前有个hack是，使用translateZ将目标元素提升到新的层叠上下文，但是缺点是这种方法只能告诉浏览器将要发生一些事情，无法具体说明，但是当使用will-change属性时，可以通知浏览器哪些方面会发生变化。</p>
+<p>will-change可以接受任何有效的css属性，以逗号分隔属性列表，但请不要误用，误用会影响设备上资源的分配方式。</p>
+<p>例如你可能尝试在所有DOM上激活此属性优化页面上的所有过渡</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">*,</span><br><span class="line">*<span class="selector-pseudo">::before</span>,</span><br><span class="line">*<span class="selector-pseudo">::after</span>&#123;</span><br><span class="line">    <span class="attribute">will-change</span>:all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但他会起反效果，特别在层级多，复杂页面中。</p>
+<p>will-change是一个提示，应该谨慎使用，下面是应该怎么用：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 错误的用法，浏览器没有时间应用必要的优化 */</span></span><br><span class="line"><span class="selector-id">#test</span> <span class="selector-tag">a</span><span class="selector-pseudo">:hover</span>&#123;</span><br><span class="line">    <span class="attribute">background-color</span>:<span class="number">#0a0</span>;</span><br><span class="line">    <span class="attribute">will-change</span>:background-color;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 正确用法，将其应用于父元素的hover状态，以便浏览器预测*/</span></span><br><span class="line"><span class="selector-id">#test</span><span class="selector-pseudo">:hover</span> <span class="selector-tag">a</span>&#123;</span><br><span class="line">    <span class="attribute">will-change</span>:background-color;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>关于这个属性需要记住的是：<strong>可以预测元素的潜在更改，而不是假设它们会发生。</strong></p>
+<hr>
+<h5 id="理解折叠"><a href="#理解折叠" class="headerlink" title="理解折叠"></a>理解折叠</h5><p>CSS技术根据折叠上下方式这一概念将CSS分为两类：</p>
+<p>1.关键CSS - 折叠之上的内容：用户立即看到的内容，尽快加载</p>
+<p>2.非关键CSS - 折叠之下的内容：用户滚动页面前看不到的样式，也应该尽快加载，不能再关键CSS前加载。</p>
+<hr>
+<h5 id="理解渲染阻塞"><a href="#理解渲染阻塞" class="headerlink" title="理解渲染阻塞*"></a>理解渲染阻塞*</h5><p>渲染阻塞是指：阻止浏览器将内容绘制到屏幕的任何活动。</p>
+<p>对于CSS来说阻塞的初衷是好的，内有它无样式的内容会闪烁，但是阻塞时间太长会延迟内容在屏幕上的显示，所以重要的是知道阻塞的时间，且用户不会等太久，因此应当尽量减少渲染阻塞。</p>
+<p>尽管link标签是加载CSS的好方法，但是它会阻塞渲染。</p>
+<h6 id="如何查看阻塞时间"><a href="#如何查看阻塞时间" class="headerlink" title="如何查看阻塞时间"></a>如何查看阻塞时间</h6><p>Chrome =&gt; Performace =&gt; 记录 =&gt; 刷新页面 =&gt; 最底下面板仅显示Painting即可查看</p>
+<h6 id="阻塞时间长怎么办？"><a href="#阻塞时间长怎么办？" class="headerlink" title="阻塞时间长怎么办？"></a>阻塞时间长怎么办？</h6><p>首先可以将CSS直接内联到style标签，这种方法只在单网站上工作，不适合于更大更复杂的网站。</p>
+<hr>
+<h5 id="关于内联样式和HTTP-2"><a href="#关于内联样式和HTTP-2" class="headerlink" title="关于内联样式和HTTP/2*"></a>关于内联样式和HTTP/2*</h5><p>虽然内联对于HTTP/1服务器端和客户端是一种合适的实践，但它不应该用于HTTP/2服务器。这个功能可以通过使用HTTP/2的服务器推送特性来实现，同时保持可缓存性。</p>
+<h6 id="如何查看是否是HTTP-2？"><a href="#如何查看是否是HTTP-2？" class="headerlink" title="如何查看是否是HTTP/2？"></a>如何查看是否是HTTP/2？</h6><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 保证这个方法只在支持loadTimes的chrome浏览器下执行</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">window</span>.chrome &amp;&amp; <span class="keyword">typeof</span> chrome.loadTimes === <span class="string">'function'</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> loadTimes = <span class="built_in">window</span>.chrome.loadTimes();</span><br><span class="line">        <span class="keyword">var</span> spdy = loadTimes.wasFetchedViaSpdy;</span><br><span class="line">        <span class="keyword">var</span> info = loadTimes.npnNegotiatedProtocol || loadTimes.connectionInfo;</span><br><span class="line">        <span class="comment">// 就以 「h2」作为判断标识</span></span><br><span class="line">        <span class="keyword">if</span>(spdy &amp;&amp; <span class="regexp">/^h2/i</span>.test(info)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">console</span>.info(<span class="string">'本站点使用了HTTP/2'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.warn(<span class="string">'本站点没有使用HTTP/2'</span>);</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<p>摘自：<a href="https://www.jianshu.com/p/d57c55960fba" target="_blank" rel="noopener">如何判断网站是否启用HTTP/2</a></p>
+<hr>
+<h5 id="关键CSS"><a href="#关键CSS" class="headerlink" title="关键CSS*"></a>关键CSS*</h5><p>分为两类：</p>
+<ol>
+<li>首屏样式</li>
+<li>其余部分样式</li>
+</ol>
+<h6 id="加载首屏样式"><a href="#加载首屏样式" class="headerlink" title="加载首屏样式"></a>加载首屏样式</h6><p><strong>内联的优势</strong>：</p>
+<p>内联CSS之所以如此有效是因为浏览器不比等待太久，浏览器加载页面的HTMl时将解析文档并找到指向其他资源的URL，如果样式是通过link标签加载的，那么浏览器在等待CSS时，渲染就会被阻塞，内联时，用户只需要等待加载HTML的过程，随后浏览器就能解析CSS。</p>
+<p><strong>内联的不足</strong>：</p>
+<p>当以这种方式加载一个网站的所有CSS时，就会失去可移植性，每次加载页面都会复制CSS，意味着以后每次加载页面时都会出现无法有效缓存的情况。</p>
+<p>因此比较好的方法是：</p>
+<p>只将首屏样式存储到style标签中，剩下的样式从外部文件加载。即使使用的是CSS框架，你仍然可以内联用于特定页面的框架部分。当浏览器开始更快地绘制页面时，就会达到预期的效果，并且用户不会注意到少量冗余CSS对性能的损害。</p>
+<h6 id="首屏之外内容样式"><a href="#首屏之外内容样式" class="headerlink" title="首屏之外内容样式**"></a>首屏之外内容样式**</h6><p>这是关键，不要以常规方式link外部内容，而是用preload资源提示加载CSS，同时不会阻塞渲染，还需要一个js用来做polyfill。</p>
+<p>如下写法：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"preload"</span> <span class="attr">href</span>=<span class="string">"css/styles.min.css"</span> <span class="attr">as</span>=<span class="string">"style"</span> <span class="attr">onload</span>=<span class="string">"this.ref='stylesheet'"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样可以在不阻塞渲染的情况下加载CSS。CSS完成下载时，标签上的onload事件处理程序将被触发。下载完成后，rel属性的值就会从preload转换为stylesheet，JavaScript polyfill作为兜底，以防浏览器不支持preload提示。</p>
+<h6 id="禁用JavaScript的用户"><a href="#禁用JavaScript的用户" class="headerlink" title="禁用JavaScript的用户"></a>禁用JavaScript的用户</h6><p>通过noscript标签加载link，这样还可正常渲染页面，只不过还会受到阻塞的影响。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">noscript</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">""</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">noscript</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h6 id="收益权衡"><a href="#收益权衡" class="headerlink" title="收益权衡"></a>收益权衡</h6><p>随着连接速度增加和延迟减少，收益也会减少。你所做的任何一种前端优化都是这样的。并非每个连接都会创造同等收益，为那些最有可能使用低质量互联网连接的移动用户进行优化尤为重要。</p>
+<p>有一个统计数据需要记住：0.1秒是用户感觉界面瞬间做出反应的极限。</p>
+<hr>
+<h5 id="CSS中的图像传输"><a href="#CSS中的图像传输" class="headerlink" title="CSS中的图像传输 *"></a>CSS中的图像传输 *</h5><p>用于正确传输图像的主要CSS功能是媒体查询。</p>
+<h6 id="CSS媒体查询适配显示器"><a href="#CSS媒体查询适配显示器" class="headerlink" title="CSS媒体查询适配显示器"></a>CSS媒体查询适配显示器</h6><p>使用CSS实现响应式图像时，最好的工具是媒体查询，通过它可以决定为哪种屏幕宽度改变特定选择器的background-image规则。</p>
+<p>首先准备一个适用于各种屏幕的图片文件夹结构类似于：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">图片名称			 分辨率			媒体查询</span><br><span class="line">image-xxxsmall.jpg 	<span class="number">320</span>*<span class="number">135</span>				默认</span><br><span class="line">image-xxsmall.jpg	<span class="number">640</span>*<span class="number">269</span>			(min-width:<span class="number">30</span>em)</span><br><span class="line">image-xsmall.jpg	<span class="number">768</span>*<span class="number">323</span>			(min-width:<span class="number">44</span>em)</span><br><span class="line">image-small.jpg		<span class="number">1024</span>*<span class="number">430</span>		(min-width:<span class="number">56</span>em)</span><br><span class="line">image-medium.jpg	<span class="number">1440</span>*<span class="number">604</span>		(min-width:<span class="number">77</span>em)</span><br><span class="line">image-large.jpg		<span class="number">1920</span>*<span class="number">805</span>		(min-width:<span class="number">105</span>em)</span><br><span class="line">image-xlarge.jpg	<span class="number">2560</span>*<span class="number">1073</span>		(min-width:<span class="number">140</span>em)</span><br><span class="line">image-xxlarge.jpg	<span class="number">3840</span>*<span class="number">1609</span>		暂不使用</span><br></pre></td></tr></table></figure>
+
+<p>每个图像都属于一个特定的设备分辨率范围，可在不拉伸到像素化的情况下进行缩放</p>
+<p>在480像素的临界点处，640像素版本的图像开始生效，并放大到703像素的宽度。在704像素处，一个新的临界点出现，一个更高分辨率的图像被替换。这一直持续到最大分辨率为止。</p>
+<h6 id="通过媒体查询适配高DPI显示器"><a href="#通过媒体查询适配高DPI显示器" class="headerlink" title="通过媒体查询适配高DPI显示器 *"></a>通过媒体查询适配高DPI显示器 *</h6><p>要实现响应式图像，必须兼容高DPI显示器，比如4K和5K等超高清显示器。</p>
+<p>高DPI显示器提供了增强的视觉体验，但给开发者带来了新的挑战：如何高效传递这些图像。</p>
+<p>高DPI媒体查询，不仅要像以前那样针对设备宽度，还要针对结合媒体查询的像素密度：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@media</span> screen(<span class="attribute">-webkit-min-device-pixel-ratio:</span><span class="number">2</span>),(<span class="attribute">min-resolution:</span><span class="number">192dpi</span>)&#123;</span><br><span class="line">    <span class="comment">/* 高DPI样式 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>-webkit-min-device-pixel-ratio媒体查询是WebKit实现的兼容旧浏览器的高DPI显示支持，它会检查像素密度的简单比率，其中比率1相当于96DPI，在下载更高分辨率图像之前，要确保显示器像素密度最少为192DPI。</p>
+<p>min-resolution媒体查询用于现代浏览器支持。，它采用更直接的值192dpi。</p>
+<p>这意味着前面的图像要重新设计，在最后一行加上高DPI媒体查询：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">图片名称			 分辨率			高<span class="selector-tag">DPI</span>媒体查询</span><br><span class="line"><span class="selector-tag">image-xxxsmall</span><span class="selector-class">.jpg</span> 	320*135	   (<span class="selector-tag">-webkit-min-device-pixel-ratio</span><span class="selector-pseudo">:2)</span>,</span><br><span class="line">					          (<span class="selector-tag">min-resolution</span><span class="selector-pseudo">:192dpi)</span>	 </span><br><span class="line"><span class="selector-tag">image-xxsmall</span><span class="selector-class">.jpg</span>	640*269		(<span class="selector-tag">-webkit-min-device-pixel-ratio</span><span class="selector-pseudo">:2)</span>,</span><br><span class="line">						(<span class="selector-tag">min-resolution</span><span class="selector-pseudo">:192dpi)</span>, <span class="selector-tag">and</span> (<span class="selector-tag">min-width</span><span class="selector-pseudo">:30em)</span></span><br><span class="line"><span class="selector-tag">image-xsmall</span><span class="selector-class">.jpg</span>	768*323		(<span class="selector-tag">-webkit-min-device-pixel-ratio</span><span class="selector-pseudo">:2)</span>,</span><br><span class="line">						(<span class="selector-tag">min-resolution</span><span class="selector-pseudo">:192dpi)</span>, <span class="selector-tag">and</span> (<span class="selector-tag">min-width</span><span class="selector-pseudo">:44em)</span></span><br><span class="line"><span class="selector-tag">image-small</span><span class="selector-class">.jpg</span>		1024*430	(<span class="selector-tag">-webkit-min-device-pixel-ratio</span><span class="selector-pseudo">:2)</span>,</span><br><span class="line">						(<span class="selector-tag">min-resolution</span><span class="selector-pseudo">:192dpi)</span>, <span class="selector-tag">and</span> (<span class="selector-tag">min-width</span><span class="selector-pseudo">:56em)</span></span><br><span class="line"><span class="selector-tag">image-medium</span><span class="selector-class">.jpg</span>	1440*604	(<span class="selector-tag">-webkit-min-device-pixel-ratio</span><span class="selector-pseudo">:2)</span>,</span><br><span class="line">						(<span class="selector-tag">min-resolution</span><span class="selector-pseudo">:192dpi)</span>, <span class="selector-tag">and</span> (<span class="selector-tag">min-width</span><span class="selector-pseudo">:77em)</span></span><br><span class="line"><span class="selector-tag">image-large</span><span class="selector-class">.jpg</span>		1920*805	(<span class="selector-tag">-webkit-min-device-pixel-ratio</span><span class="selector-pseudo">:2)</span>,</span><br><span class="line">						(<span class="selector-tag">min-resolution</span><span class="selector-pseudo">:192dpi)</span>, <span class="selector-tag">and</span> (<span class="selector-tag">min-width</span><span class="selector-pseudo">:105em)</span></span><br><span class="line"><span class="selector-tag">image-xlarge</span><span class="selector-class">.jpg</span>	2560*1073	(<span class="selector-tag">-webkit-min-device-pixel-ratio</span>),</span><br><span class="line">						(<span class="selector-tag">min-resolution</span><span class="selector-pseudo">:192dpi)</span>, <span class="selector-tag">and</span> (<span class="selector-tag">min-width</span><span class="selector-pseudo">:140em)</span></span><br><span class="line"><span class="selector-tag">image-xxlarge</span><span class="selector-class">.jpg</span>	3840*1609		暂不使用</span><br></pre></td></tr></table></figure>
+
+<p>高DPICSS写法</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@media</span> screen (<span class="attribute">-webkit-min-device-pixel-ratio:</span><span class="number">2</span>),(<span class="attribute">min-resolution:</span><span class="number">192dpi</span>) , <span class="keyword">and</span> (<span class="attribute">min-width:</span><span class="number">44em</span>)&#123;</span><br><span class="line">    <span class="comment">/* 高dpi且44em时 */</span></span><br><span class="line">    <span class="selector-id">#xxx</span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="CSS中使用SVG"><a href="#CSS中使用SVG" class="headerlink" title="CSS中使用SVG"></a>CSS中使用SVG</h6><p>如果有一个包含很多线条艺术的图像，那么使用SVG就很完美，在CSS中使用这些图像类型时，不需要通过媒体查询在所有分辨率和显示密度之间完美显示图像。</p>
+<p>写法同样很简单：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.test</span>&#123;</span><br><span class="line">	<span class="attribute">background</span>:<span class="built_in">url</span>(<span class="string">'../xx.svg'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h5 id="图像的全局max-width规则"><a href="#图像的全局max-width规则" class="headerlink" title="图像的全局max-width规则"></a>图像的全局max-width规则</h5><p>对于任何一个网站，CSS中都应该有一个规则，比如对所有img元素设置全局max-width规则：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">img</span>&#123;</span><br><span class="line">    <span class="attribute">max-width</span>:<span class="number">100%</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种规则的好处：</p>
+<ol>
+<li>任何img元素都渲染为自然宽度，超过容器宽度时，这条规则会将图像宽度限制为容器宽度。</li>
+</ol>
+
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong s>
+              本博客所有文章除特别声明外，均采用 <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="external nofollow"
+                target="_blank">Apache License 2.0</a> 许可协议。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://negronis.github.io/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96CSS%E6%96%B9%E5%90%91/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%9B%BE%E5%83%8F%E6%96%B9%E5%90%91/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            性能优化图像方向
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%BB%A3%E7%A0%81Http%E6%96%B9%E5%90%91/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">性能优化代码Http方向</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        Jiayu Fan
+      </li>
+      <li>
+        
+        Powered by
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Negroni&#39;s blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>在？来整活儿...</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['console.log(&#39;Hello World!&#39;);', '', ''],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+    
+  </div>
+</body>
+
+</html>
