@@ -62,7 +62,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">774字</span>
+            <span class="post-count">775字</span>
         </span>
     </span>
 
@@ -111,7 +111,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type a.js,jquery.js &gt; c.js</span><br></pre></td></tr></table></figure>
 
 <p>然后替换script标签。</p>
-<p>如果你可以管理依赖项，那么使用async是值得的。它也得到了高度支持，在所有主要浏览器中都可用，甚至在IE10及以上版本中也可用。如果不支持async，可以将<script>标签保留在页脚，它们将以正常方式加载到较旧的浏览器中。</p>
+<p>如果你可以管理依赖项，那么使用async是值得的。它也得到了高度支持，在所有主要浏览器中都可用，甚至在IE10及以上版本中也可用。如果不支持async，可以将script标签保留在页脚，它们将以正常方式加载到较旧的浏览器中。</p>
 <h5 id="多脚本加载可靠地使用async"><a href="#多脚本加载可靠地使用async" class="headerlink" title="多脚本加载可靠地使用async"></a>多脚本加载可靠地使用async</h5><p>对于HTTP/1服务器端和客户端来说，这是一种很好的优化实践，因为它可以帮助缓解该协议版本固有的队头阻塞问题，HTTP/2连接受益于以更细粒度的方式（而不是打包）提供资源。更细粒度的资源可以使缓存更有效。HTTP/2能够提供比HTTP/1更多的并发请求，从而解决队头阻塞的问题。</p>
 <p><strong>AMD模块</strong>：Alameda是由Mozilla开发者James Burke编写的异步模块定义（Asynchronous Module Definition, AMD）模块加载器，它能够确保脚本异步加载，同时遵循其依赖关系。</p>
 <p>引入AMD：</p>
@@ -122,8 +122,7 @@
 
 <p>定义一个配置，告诉Alameda jquery.min.js所在的位置，然后将a.js脚本包装在一个模块定义中，该模块定义在第一个参数中将jQuery指定为依赖项。然后，第二个参数中的依赖代码在满足其依赖关系时运行。</p>
 <p>首次绘制时间仍然维持在与打包脚本和使用async时相同的水平。不过最大的区别在于，你在保持脚本独立的同时，遵循了a.js对jquery.min.js的依赖性。</p>
-<hr>
-<h3 id=""><a href="#" class="headerlink" title=""></a></h3>
+
       
       <!-- reward -->
       

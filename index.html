@@ -770,7 +770,7 @@
 
 </article>
     
-    <article id="post-性能实战下" class="article article-type-post" itemscope
+    <article id="post-函数的执行上下文和作用域链" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -778,8 +778,8 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2021/03/30/%E6%80%A7%E8%83%BD%E5%AE%9E%E6%88%98%E4%B8%8B/"
-    >性能实战下</a
+  <a class="article-title" href="/2021/01/27/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/"
+    >函数的执行上下文和作用域链</a
   >
 </h2>
   
@@ -789,12 +789,12 @@
 
     
     <div class="article-meta">
-      <a href="/2021/03/30/%E6%80%A7%E8%83%BD%E5%AE%9E%E6%88%98%E4%B8%8B/" class="article-date">
-  <time datetime="2021-03-30T12:41:09.000Z" itemprop="datePublished">2021-03-30</time>
+      <a href="/2021/01/27/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/" class="article-date">
+  <time datetime="2021-01-27T11:55:22.000Z" itemprop="datePublished">2021-01-27</time>
 </a>
       
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
   </div>
 
       
@@ -811,13 +811,44 @@
       
 
       
-      <h3 id="Web性能分析与评估"><a href="#Web性能分析与评估" class="headerlink" title="Web性能分析与评估"></a>Web性能分析与评估</h3><h4 id="Google-PageSpeed-Insights"><a href="#Google-PageSpeed-Insights" class="headerlink" title="Google PageSpeed Insights"></a><a href="https://developers.google.cn/speed/pagespeed/insights/" target="_blank" rel="noopener">Google PageSpeed Insights</a></h4><p>该工具是Google的评估工具，它会分析网站，并就如何改进性能和体验给出建议，一共会执行两次，一次是使用移动用户代理，一次是使用桌面用户代理，它分析性能分两个因素，折线以上为内容加载所需实现，以及整个页面加载所需时间</p>
-<p>该工具无法检测本地URL，仅支持上线的Web网站。</p>
-<h4 id="Google-Analytics批量报告-无法访问，you-know"><a href="#Google-Analytics批量报告-无法访问，you-know" class="headerlink" title="Google Analytics批量报告( 无法访问，you know )"></a>Google Analytics批量报告( 无法访问，you know )</h4><p>这个报告工具提供了网站访问者的数据，例如其位置、如何到达你的网站、在哪里花费了多少时间，以及其他统计信息</p>
-<p>如果你的网站上已经有Google Analytics，那么你要做的就是登录并跟进。如果你尚未在网站上安装它，请使用Google账户登录<a href="http://www.google.com/analytics，并按照说明进行操作。这个过程只需花费很少的时间，并且需要将一小段JavaScript代码粘贴到站点的HTML中。之后需要等一到两天，让GoogleAnalytics收集数据。" target="_blank" rel="noopener">http://www.google.com/analytics，并按照说明进行操作。这个过程只需花费很少的时间，并且需要将一小段JavaScript代码粘贴到站点的HTML中。之后需要等一到两天，让GoogleAnalytics收集数据。</a></p>
-<p>请注意，向网站添加Google Analytics会带来法律问题。安装跟踪代码时，你要接受法律协议的条款。如果你是网站的唯一拥有者，那么可以自行决定，否则一定要得到网站拥有者的同意。如果你是一家大公司的开发人员，这一点很重要，因为法律审查在大公司是常见的流程。</p>
+      <h4 id="概念解释："><a href="#概念解释：" class="headerlink" title="概念解释："></a>概念解释：</h4><table>
+<thead>
+<tr>
+<th align="left">概念</th>
+<th align="left">意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">执行上下文[execution context]</td>
+<td align="left">描述JavaScript代码执行的抽象概念，所有JavaScript代码都是在某个执行上下文中运行的</td>
+</tr>
+<tr>
+<td align="left">激活对象[activeation]</td>
+<td align="left">进入新的执行上下文时创建出来，与新的执行上下文关联</td>
+</tr>
+<tr>
+<td align="left">作用域链[scope chain]</td>
+<td align="left">由对象列表或者对象链组成，构成了函数调用上下文环境的作用域</td>
+</tr>
+<tr>
+<td align="left">arguments</td>
+<td align="left">内部存储函数参数的类数组</td>
+</tr>
+<tr>
+<td align="left">内部属性[scope]</td>
+<td align="left">由对象列表或对象链组成，构成了函数调用上下环境的作用域</td>
+</tr>
+<tr>
+<td align="left">词法作用域</td>
+<td align="left">函数定义时根据函数代码嵌套关系而确定的作用域</td>
+</tr>
+<tr>
+<td align="left">动态作用域</td>
+<td align="left">函数执行时根据调用随时调整的作用域</td>
+</tr>
+</tbody></table>
       
-      <a class="article-more-link" href="/2021/03/30/%E6%80%A7%E8%83%BD%E5%AE%9E%E6%88%98%E4%B8%8B/">阅读更多...</a>
+      <a class="article-more-link" href="/2021/01/27/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/">阅读更多...</a>
       
       
       <!-- reward -->
@@ -830,7 +861,7 @@
     <footer class="article-footer">
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
 
 
     </footer>
@@ -853,7 +884,7 @@
   
   <nav class="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
   </nav>
   
 </section>
