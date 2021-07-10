@@ -69,6 +69,158 @@
     
     
     
+    <article id="post-线性代数矩阵方向学习笔记二" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2021/07/10/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9F%A9%E9%98%B5%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%BA%8C/"
+    >线性代数矩阵方向学习笔记二</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/07/10/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9F%A9%E9%98%B5%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%BA%8C/" class="article-date">
+  <time datetime="2021-07-10T04:18:50.000Z" itemprop="datePublished">2021-07-10</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E5%AD%A6/">数学</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="第二章-方阵的行列式"><a href="#第二章-方阵的行列式" class="headerlink" title="第二章 方阵的行列式"></a>第二章 方阵的行列式</h3><h4 id="1-排列及其逆序数"><a href="#1-排列及其逆序数" class="headerlink" title="1. 排列及其逆序数"></a>1. 排列及其逆序数</h4><h5 id="定义1-从1，2，…，n中任意选取r个不同的数排成一列，称为排列．"><a href="#定义1-从1，2，…，n中任意选取r个不同的数排成一列，称为排列．" class="headerlink" title="定义1　从1，2，…，n中任意选取r个不同的数排成一列，称为排列．"></a>定义1　从1，2，…，n中任意选取r个不同的数排成一列，称为排列．</h5><h5 id="定义2-将1，2，…，n这n个不同的数排成一列，称为n阶全排列，也简称为全排列．"><a href="#定义2-将1，2，…，n这n个不同的数排成一列，称为n阶全排列，也简称为全排列．" class="headerlink" title="定义2　将1，2，…，n这n个不同的数排成一列，称为n阶全排列，也简称为全排列．"></a>定义2　将1，2，…，n这n个不同的数排成一列，称为n阶全排列，也简称为全排列．</h5><p>例如，设有1，2，3，4，5五个元素，则31是五个元素的一个排列，312是五个元素的一个排列，312也可以看成是1，2，3三个元素的一个全排列；4215是五个元素的一个排列，而42153是五个元素的一个全排列．<br>n阶全排列的总数为n!=n·（n-1）…3·2·1，例如，4!=4×3×2×1=24，5!=5×4×3×2×1=120．</p>
+<h5 id="定义3-在一个排列中，如果一对数的排列顺序与自然顺序相反，即排在左边的数比排在它右边的数大，那么它们就称为一个逆序，一个排列中逆序的总数就称为这个排列的逆序数．排列i1i2…in的逆序数记为τ（i1i2…in）．"><a href="#定义3-在一个排列中，如果一对数的排列顺序与自然顺序相反，即排在左边的数比排在它右边的数大，那么它们就称为一个逆序，一个排列中逆序的总数就称为这个排列的逆序数．排列i1i2…in的逆序数记为τ（i1i2…in）．" class="headerlink" title="定义3　在一个排列中，如果一对数的排列顺序与自然顺序相反，即排在左边的数比排在它右边的数大，那么它们就称为一个逆序，一个排列中逆序的总数就称为这个排列的逆序数．排列i1i2…in的逆序数记为τ（i1i2…in）．"></a>定义3　在一个排列中，如果一对数的排列顺序与自然顺序相反，即排在左边的数比排在它右边的数大，那么它们就称为一个逆序，一个排列中逆序的总数就称为这个排列的逆序数．排列i1i2…in的逆序数记为τ（i1i2…in）．</h5><h4 id="n阶行列式"><a href="#n阶行列式" class="headerlink" title="n阶行列式"></a>n阶行列式</h4><h5 id="2阶行列式和3阶行列式"><a href="#2阶行列式和3阶行列式" class="headerlink" title="2阶行列式和3阶行列式"></a>2阶行列式和3阶行列式</h5><p>三阶行列式的运算技巧：（三角法则简化）</p>
+<p>|a| =   a11 + a22 + a33<br>        +a12 + a23 + a31<br>        +a13 + a21 + a32<br>        -a13 + a22 + a31<br>        -a12 + a21 + a33<br>        -a11 + a23 + a32<br>简化就是<br>|a| = a 123  + a231 + a312 - a321 - a213 - a132</p>
+<hr>
+<h5 id="如果按照公式："><a href="#如果按照公式：" class="headerlink" title="如果按照公式："></a>如果按照公式：</h5><p><img src="https://img-blog.csdnimg.cn/20210708190534269.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>以及特性：<br><img src="https://img-blog.csdnimg.cn/20210708190714931.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>进行求行列式的方法如下：</p>
+<p>3阶行列式的求法：<br><img src="https://img-blog.csdnimg.cn/20210708190854457.png" alt="在这里插入图片描述"><br>已知每一项a1p1a2p2anpn<strong>均取自不同行不同列</strong>的n的元素的乘积以及<strong>行标排成标准序</strong>可得：</p>
+<p>行标为标准序<br>a11 a22 a33<br>a11 a23 a32<br>a12 a21 a33<br>a12 a23 a31<br>a13 a22 a31<br>a13 a21 a32</p>
+<p>然后对列标排成序列求逆序数：<br>τ(123) = 0 标准序为+<br>τ(132) = 1 奇数为-<br>τ(213) = 1 奇数为-<br>τ(231) = 2 偶数为+<br>τ(321) = 3 奇数为-<br>τ(312) = 2 偶数为+</p>
+<p>最后把他们的乘积加起来：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1*3*(-1) + 2*1*1 + -2*(-3)*2 -1*1*2 - 2*(-3) *(-1) - (-2)*3*1</span><br><span class="line">&#x3D; -3 + 2 + 12 - 2 -6 +6</span><br><span class="line">&#x3D; 11 -2</span><br><span class="line">&#x3D; 9</span><br></pre></td></tr></table></figure>
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" rel="tag">线性代数</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-线性代数矩阵方向学习笔记一" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2021/07/10/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9F%A9%E9%98%B5%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/"
+    >线性代数矩阵方向学习笔记一</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/07/10/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9F%A9%E9%98%B5%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/" class="article-date">
+  <time datetime="2021-07-10T04:16:33.000Z" itemprop="datePublished">2021-07-10</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E5%AD%A6/">数学</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="矩阵的定义"><a href="#矩阵的定义" class="headerlink" title="矩阵的定义"></a>矩阵的定义</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>m×n个数aij（i=1，2，…，m；j=1，2，…，n）排成的m行n列的数表称为一个m×n矩阵，简记为（aij），有时为了强调矩阵的行数和列数，也记为（aij）m×n．数aij位于矩阵（aij）的第i行第j列，称为矩阵的（i，j）元素，其中i称为元素aij的行标，j称为元素aij的列标，一般地，常用英文大写字母A，B，…或字母α，β，γ，…表示矩阵，如A=（aij），B=（bij），Am×n，Bm×n等．</p>
+      
+      <a class="article-more-link" href="/2021/07/10/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9F%A9%E9%98%B5%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/">阅读更多...</a>
+      
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" rel="tag">线性代数</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-性能优化Node服务器和工具" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -696,195 +848,13 @@
 
 </article>
     
-    <article id="post-性能优化代码Http方向" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%BB%A3%E7%A0%81Http%E6%96%B9%E5%90%91/"
-    >性能优化代码Http方向</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%BB%A3%E7%A0%81Http%E6%96%B9%E5%90%91/" class="article-date">
-  <time datetime="2021-04-17T00:40:27.000Z" itemprop="datePublished">2021-04-17</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h3 id="Web优化"><a href="#Web优化" class="headerlink" title="Web优化"></a>Web优化</h3><p>每个终端对于网站的响应速度是不同的，不同的DPI对网站响应速度也是不同的，其速率一般可以简化为以下规律：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">桌面端高dpi &gt; 移动端高dpi &gt; 桌面端 &gt; 移动端</span><br></pre></td></tr></table></figure>
-      
-      <a class="article-more-link" href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%BB%A3%E7%A0%81Http%E6%96%B9%E5%90%91/">阅读更多...</a>
-      
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-函数的执行上下文和作用域链" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/01/27/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/"
-    >函数的执行上下文和作用域链</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2021/01/27/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/" class="article-date">
-  <time datetime="2021-01-27T11:55:22.000Z" itemprop="datePublished">2021-01-27</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h4 id="概念解释："><a href="#概念解释：" class="headerlink" title="概念解释："></a>概念解释：</h4><table>
-<thead>
-<tr>
-<th align="left">概念</th>
-<th align="left">意义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">执行上下文[execution context]</td>
-<td align="left">描述JavaScript代码执行的抽象概念，所有JavaScript代码都是在某个执行上下文中运行的</td>
-</tr>
-<tr>
-<td align="left">激活对象[activeation]</td>
-<td align="left">进入新的执行上下文时创建出来，与新的执行上下文关联</td>
-</tr>
-<tr>
-<td align="left">作用域链[scope chain]</td>
-<td align="left">由对象列表或者对象链组成，构成了函数调用上下文环境的作用域</td>
-</tr>
-<tr>
-<td align="left">arguments</td>
-<td align="left">内部存储函数参数的类数组</td>
-</tr>
-<tr>
-<td align="left">内部属性[scope]</td>
-<td align="left">由对象列表或对象链组成，构成了函数调用上下环境的作用域</td>
-</tr>
-<tr>
-<td align="left">词法作用域</td>
-<td align="left">函数定义时根据函数代码嵌套关系而确定的作用域</td>
-</tr>
-<tr>
-<td align="left">动态作用域</td>
-<td align="left">函数执行时根据调用随时调整的作用域</td>
-</tr>
-</tbody></table>
-      
-      <a class="article-more-link" href="/2021/01/27/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/">阅读更多...</a>
-      
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
   </nav>
   
 </section>

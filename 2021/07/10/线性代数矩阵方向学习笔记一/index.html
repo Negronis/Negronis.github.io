@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    线性代数矩阵方向学习笔记一 |  Negroni&#39;s blog
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-线性代数矩阵方向学习笔记一" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  线性代数矩阵方向学习笔记一
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/07/10/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9F%A9%E9%98%B5%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/" class="article-date">
+  <time datetime="2021-07-10T04:16:33.000Z" itemprop="datePublished">2021-07-10</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E5%AD%A6/">数学</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.1k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">8分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="矩阵的定义"><a href="#矩阵的定义" class="headerlink" title="矩阵的定义"></a>矩阵的定义</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>m×n个数aij（i=1，2，…，m；j=1，2，…，n）排成的m行n列的数表称为一个m×n矩阵，简记为（aij），有时为了强调矩阵的行数和列数，也记为（aij）m×n．数aij位于矩阵（aij）的第i行第j列，称为矩阵的（i，j）元素，其中i称为元素aij的行标，j称为元素aij的列标，一般地，常用英文大写字母A，B，…或字母α，β，γ，…表示矩阵，如A=（aij），B=（bij），Am×n，Bm×n等．</p>
+<a id="more"></a>
+
+<h4 id="实矩阵与复矩阵"><a href="#实矩阵与复矩阵" class="headerlink" title="实矩阵与复矩阵"></a>实矩阵与复矩阵</h4><p>元素是实数的矩阵称为实矩阵，元素是复数的矩阵称为复矩阵</p>
+<h4 id="上下三角阵与对角阵"><a href="#上下三角阵与对角阵" class="headerlink" title="上下三角阵与对角阵"></a>上下三角阵与对角阵</h4><p>n×n矩阵称为n阶方阵．元素aii（i=1，2，…，n）所在的位置称为n阶方阵的主对角线，一个n阶方阵主对角线上方的元素全为零称该n阶方阵为下三角矩阵．下三角矩阵的元素特点是：当i&lt;j时，aij=0。<br><img src="https://img-blog.csdnimg.cn/20210705193905881.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>类似地，有上三角矩阵，上三角矩阵的元素特点是：当i&gt;j时，aij=0<br><img src="https://img-blog.csdnimg.cn/20210705193936510.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>n阶对角矩阵，简称对角阵，记为diag（a1，a2，…，an）．如果n阶对角矩阵diag（a1，a2，…，an）对角线上的元素全相等，即a1=a2=…=an，则称其为数量矩阵．当a1=a2=…=an=1时，这个数量矩阵就称为n阶单位矩阵，简称为单位阵，记为En或E，即<br><img src="https://img-blog.csdnimg.cn/20210705194026612.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="同型矩阵"><a href="#同型矩阵" class="headerlink" title="同型矩阵"></a>同型矩阵</h4><p>两个矩阵的行数相等、列数也相等，则称这两个矩阵为同型矩阵．如果两个同型矩阵A=（aij）m×n和B=（bij）m×n中所有对应位置的元素都相等，即aij=bij，其中i=1，2，…，m；j=1，2，…，n，则称矩阵A和B相等，记为A=B．</p>
+<hr>
+<h3 id="矩阵的线性运算"><a href="#矩阵的线性运算" class="headerlink" title="矩阵的线性运算"></a>矩阵的线性运算</h3><h4 id="矩阵的加法"><a href="#矩阵的加法" class="headerlink" title="矩阵的加法"></a>矩阵的加法</h4><p>设A=（aij）m×n和B=（bij）m×n是两个同型矩阵，则矩阵A与B的和记为A+B，即：<br><img src="https://img-blog.csdnimg.cn/20210705194229148.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>矩阵的加法满足如下的运算规律：设A，B，C是任意三个m×n矩阵，则<br>    （1）交换律：A+B=B+A；<br>    （2）结合律：（A+B）+C=A+（B+C）；<br>    （3）A+Om×n=Om×n+A=A</p>
+<p>对于矩阵A=（aij）m×n，称矩阵（-aij）m×n为矩阵A的负矩阵，记为-A。<br>A+（-A）=Om×n．由此可以定义矩阵A=（aij）m×n和B=（bij）m×n的减法为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A-B&#x3D;A+（-B）&#x3D;（aij-bij）m×n．</span><br></pre></td></tr></table></figure>
+<h4 id="矩阵的数乘"><a href="#矩阵的数乘" class="headerlink" title="矩阵的数乘"></a>矩阵的数乘</h4><p>用一个数k乘矩阵A=（aij）m×n的所有元素得到的矩阵（kaij）m×n称为矩阵的数乘，记为kA或者Ak，即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kA&#x3D;Ak&#x3D;（kaij）m×n．</span><br></pre></td></tr></table></figure>
+<p>如果k，l是任意两个数，A，B是任意两个m×n矩阵,则矩阵的数乘运算满足：<br>（1）k（A+B）=kA+kB；<br>（2）（k+l）A=kA+lA；<br>（3）（kl）A=k（lA）=l（kA）；<br>（4）1A=A；<br>（5）（-1）A=-A；<br>（6）0A=Om×n．</p>
+<p>矩阵的加法和矩阵的数乘统称为矩阵的线性运算</p>
+<h4 id="矩阵的乘法"><a href="#矩阵的乘法" class="headerlink" title="矩阵的乘法"></a>矩阵的乘法</h4><p>设矩阵A=（aij）是一个m×p矩阵，矩阵B=（bij）是一个p×n矩阵，定义矩阵A与B的乘积是一个m×n矩阵C=（cij），其中矩阵C=（cij）的第i行第j列元素cij是矩阵A的第i行元素ai1，ai2，…，aip与矩阵B的第j列相应元素b1j，b2j，…，bpj的乘积之和，即：<br><img src="https://img-blog.csdnimg.cn/20210705194615814.png" alt="在这里插入图片描述"><br><strong>必须注意：只有当第一个矩阵（左边的矩阵）的列数与第二个矩阵（右边的矩阵）的行数相等时，两个矩阵才能相乘</strong></p>
+<p>在做矩阵乘法时，我们要注意：<br>（1）矩阵乘法不满足交换律，即在一般情况下，AB≠BA；<br>（2）尽管矩阵A与B满足AB=O，但是得不出A=O或B=O的结论．</p>
+<p>但是，矩阵乘法仍满足下列运算规律（假设运算都是可行的）．<br>（1）结合律：（AB）C=A（BC）．<br>（2）矩阵乘法对矩阵加法的分配律：A（B+C）=AB+AC，（A+B）C=AC+BC．<br>（3）（kA）B=A（kB）=k（AB）．<br>（4）EmAm×n=Am×nEn=Am×n．<br>（5）Om×sAs×n=Om×n；Am×sOs×n=Om×n．</p>
+<p>由于矩阵乘法满足结合律，我们可以定义方阵的方幂如下：<br><img src="https://img-blog.csdnimg.cn/20210705194931496.png" alt="在这里插入图片描述"><br>并且规定：对非零方阵A，有A0=E．方阵的方幂满足以下运算规律（这里k，l均为非负整数）：<br><img src="https://img-blog.csdnimg.cn/2021070519494846.png" alt="在这里插入图片描述">)<img src="https://img-blog.csdnimg.cn/20210705195024830.png" alt="在这里插入图片描述"><br>单列矩阵与单行矩阵相乘法则：<br><img src="https://img-blog.csdnimg.cn/20210706162105111.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="矩阵转置"><a href="#矩阵转置" class="headerlink" title="矩阵转置"></a>矩阵转置</h3><p><img src="https://img-blog.csdnimg.cn/20210705195102328.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20210705195134294.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<hr>
+<h3 id="第二节-分块矩阵"><a href="#第二节-分块矩阵" class="headerlink" title="第二节 分块矩阵"></a>第二节 分块矩阵</h3><h4 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h4><p>对于行数和列数较高的矩阵A，运算时常用一些横线和竖线将矩阵A分划成若干个小矩阵，每一个小矩阵称为A的子块，以子块为元素的形式上的矩阵称为分块矩阵。</p>
+<p>一个矩阵的分块方式会有很多种，例如，将4×5矩阵：<br><img src="https://img-blog.csdnimg.cn/20210705195250626.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/2021070519530860.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/2021070519532581.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20210705195339807.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20210705195409455.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="分块矩阵的运算"><a href="#分块矩阵的运算" class="headerlink" title="分块矩阵的运算"></a>分块矩阵的运算</h4><h5 id="分块矩阵的加减运算"><a href="#分块矩阵的加减运算" class="headerlink" title="分块矩阵的加减运算"></a>分块矩阵的加减运算</h5><p>分块矩阵加（减）运算：设A、B都是m×n矩阵，对两个矩阵的行和列采用相同的分块方式<br><img src="https://img-blog.csdnimg.cn/20210705195528210.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5 id="分块矩阵的数乘运算"><a href="#分块矩阵的数乘运算" class="headerlink" title="分块矩阵的数乘运算"></a>分块矩阵的数乘运算</h5><p>分块矩阵的数乘运算：矩阵的分块方式没有特别规定，对任意的分块<br><img src="https://img-blog.csdnimg.cn/20210705195612360.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5 id="分块矩阵的乘法"><a href="#分块矩阵的乘法" class="headerlink" title="分块矩阵的乘法"></a>分块矩阵的乘法</h5><p>设A为m×s矩阵，B为s×n矩阵，要求矩阵A的列分块方式与矩阵B的行分块方式保持一致，而对矩阵A的行分块方式及矩阵B的列分块方式没有任何要求和限制，可设：<br><img src="https://img-blog.csdnimg.cn/20210705195718653.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="分块矩阵的转置"><a href="#分块矩阵的转置" class="headerlink" title="分块矩阵的转置"></a>分块矩阵的转置</h4><p>设：<br><img src="https://img-blog.csdnimg.cn/20210705195838244.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="分块对角阵"><a href="#分块对角阵" class="headerlink" title="分块对角阵"></a>分块对角阵</h4><p>设A是n阶方阵，若A的分块矩阵只有在主对角线上有非零子块，且这些非零子块都是方阵，而其余子块都是零矩阵。<br><img src="https://img-blog.csdnimg.cn/20210705195917846.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>其中Ai（i=1，2，…，t）都是方阵，这样的分块阵称为分块对角阵．</p>
+<hr>
+<h3 id="第三节-线性方程组与矩阵的初等变换"><a href="#第三节-线性方程组与矩阵的初等变换" class="headerlink" title="第三节 线性方程组与矩阵的初等变换"></a>第三节 线性方程组与矩阵的初等变换</h3><h4 id="概念-2"><a href="#概念-2" class="headerlink" title="概念"></a>概念</h4><p>在中学时我们就学过高斯消元法解线性方程组，简单地说，就是通过方程组中方程之间的运算，把一些方程中的未知量消去，从而得到方程组的解。<br><img src="https://img-blog.csdnimg.cn/20210705203644416.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20210705203700843.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>在用消元法解线性方程组的过程中，主要用了三种方程之间的变换：<br>（1）交换两个方程的次序；<br>（2）一个方程乘上一个非零数；<br>（3）一个方程乘上一个非零数加到另一个方程上</p>
+<p>下面三种变换称为矩阵的初等行变换：<br>（1）交换矩阵的某两行，我们用ri↔rj表示交换矩阵的第i、j两行；<br>（2）矩阵的某一行乘以非零数，用kri表示矩阵的第i行元素乘以非零数k；<br>（3）将矩阵的某一行的倍数加到另一行，用rj+kri表示将矩阵第i行的k倍加到第j行．</p>
+<p>将上面定义中的“行”换成“列”（记号由“r”换成“c”），就得到了矩阵的初等列变换的定义。<br><img src="https://img-blog.csdnimg.cn/20210705203844167.png" alt="在这里插入图片描述"></p>
+<h5 id="行阶梯形矩阵"><a href="#行阶梯形矩阵" class="headerlink" title="行阶梯形矩阵"></a>行阶梯形矩阵</h5><ol>
+<li>可画一条阶梯线，线的下方全为零</li>
+<li>每个台阶只有一行，台阶数就是非零行的行数</li>
+<li>每一非零行的第一个非零元位于上一行第一个非零元的右侧</li>
+</ol>
+<p><img src="https://img-blog.csdnimg.cn/20210705203953681.png" alt="在这里插入图片描述"></p>
+<p>对于最后一个矩阵，它的非零行的第一个非零元全为1，并且这些“1”所在的列的其余元素全为零，这样的阶梯形矩阵，我们称为行<strong>最简形矩阵</strong></p>
+<p>对于行最简形矩阵再实施初等列变换，可变成一种形状更简单的矩阵<br><img src="https://img-blog.csdnimg.cn/20210705204034647.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>最后一个矩阵F称为矩阵A的标准形，写成分块矩阵的形式，则有<br><img src="https://img-blog.csdnimg.cn/20210705204049311.png" alt="在这里插入图片描述"><br>对于一般的矩阵，我们有下面的结论：<br><img src="https://img-blog.csdnimg.cn/20210705204131462.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="求解线性方程组"><a href="#求解线性方程组" class="headerlink" title="求解线性方程组"></a>求解线性方程组</h4><p><img src="https://img-blog.csdnimg.cn/20210705204228245.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20210705204242303.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20210705204338764.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="第四节-初等矩阵与矩阵的逆矩阵"><a href="#第四节-初等矩阵与矩阵的逆矩阵" class="headerlink" title="第四节 初等矩阵与矩阵的逆矩阵"></a>第四节 初等矩阵与矩阵的逆矩阵</h3><h4 id="方阵的逆矩阵"><a href="#方阵的逆矩阵" class="headerlink" title="方阵的逆矩阵"></a>方阵的逆矩阵</h4><p><img src="https://img-blog.csdnimg.cn/20210705204518918.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>若矩阵A有全零行（全零列），那么矩阵A一定不可逆</p>
+<h4 id="初等矩阵"><a href="#初等矩阵" class="headerlink" title="初等矩阵"></a>初等矩阵</h4><p>对n阶单位矩阵E实施一次初等变换得到的矩阵称为n阶初等矩阵．</p>
+<h4 id="初等矩阵与逆矩阵的应用"><a href="#初等矩阵与逆矩阵的应用" class="headerlink" title="初等矩阵与逆矩阵的应用"></a>初等矩阵与逆矩阵的应用</h4><p>下面命题互相等价：<br>    （1）n阶方阵A可逆；<br>    （2）方阵A行等价于n阶单位矩阵E；<br>    （3）方阵A可表示为一些初等方阵的乘积．<br><img src="https://img-blog.csdnimg.cn/20210705204719289.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>利用逆矩阵还可以求解矩阵方程AX=B、XA=B和AXB=C．<br><img src="https://img-blog.csdnimg.cn/20210705204743277.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>对于方程XA=B，可以先用初等行变换求解方程ATXT=BT，再转置求出X</p>
+<p>AXB=C类型的方程．令XB=Y，先用初等行变换求解方程AY=C，然后用初等行变换求解方程BTXT=YT，最后转置求出X。</p>
+<p>对于任意m×n矩阵A，均存在一个m阶可逆方阵P和一个n可逆方阵Q，使得PAQ为标准形</p>
+<p><img src="https://img-blog.csdnimg.cn/20210705204959665.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20210705205023379.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20210705205035871.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTU2NDg4NQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong s>
+              本博客所有文章除特别声明外，均采用 <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="external nofollow"
+                target="_blank">Apache License 2.0</a> 许可协议。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://negronis.github.io/2021/07/10/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9F%A9%E9%98%B5%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" rel="tag">线性代数</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2021/07/10/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9F%A9%E9%98%B5%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%BA%8C/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            线性代数矩阵方向学习笔记二
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/04/17/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96Node%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%B7%A5%E5%85%B7/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">性能优化Node服务器和工具</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        Jiayu Fan
+      </li>
+      <li>
+        
+        Powered by
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Negroni&#39;s blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>在？来整活儿...</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['console.log(&#39;Hello World!&#39;);', '', ''],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+    
+  </div>
+</body>
+
+</html>
